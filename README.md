@@ -18,7 +18,7 @@ been moved.
     git clone https://github.com/bdlucas1/diff3d
     cd diff3d
     pip install -r requirements.txt
-    python diff3d.py examples/lens-clamp-A.stl lens-clamp-B.stl
+    python diff3d.py examples/lens-clamp-A.stl examples/lens-clamp-B.stl
 
 The diff3d command may take up to about a minute to run the first time
 while it loads and compiles the supporting packages, but after that
