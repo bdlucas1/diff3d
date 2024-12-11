@@ -4,11 +4,11 @@ of the objects are shown in gray, while the changed parts are shown in
 contrasting colors that stand out, illustrated by the following
 example.
 
-<img src="examples/lens-clamp.png" width="50%">
+<img src="examples/scheme1.png" width="50%">
 
 In this example most of the lens clamp is unchanged and is displayed
 in gray, while the differing parts are displayed in red for one file
-and green for the other file. In the red file the tabs were longer,
+and green for the other file: in the red file the diameter was smaller,
 while in the green file the base was longer, and the threaded hole has
 been moved.
 
