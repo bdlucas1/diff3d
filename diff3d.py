@@ -1,6 +1,14 @@
 import pyvista
 
-def diff(o1, o2, scheme=0, alpha=0.25, title="diff3d", **kwargs):
+# colorblind-friendly color schemes per https://davidmathlogic.com/colorblind
+color_schemes = {
+    "1": ("green", "red", (0, 250, 0)),
+    "2": ("blue", "orange", (0, 100, 250)),
+    "3": ("purple", "yellow", (100, 75, 250)),
+}
+
+
+def diff(o1, o2, scheme="1", alpha=0.25, title="diff3d", **kwargs):
 
     # for interoperability with other vtk-based libraries
     # TODO: add more?
@@ -15,28 +23,23 @@ def diff(o1, o2, scheme=0, alpha=0.25, title="diff3d", **kwargs):
     if isinstance(o2, (list,tuple)):
         o2 = pyvista.MultiBlock([convert(o) for o in o2])
 
+    # get color scheme information
+    name1, name2, color1 = color_schemes[scheme]
+
     # configure plotter
     if isinstance(title, (list,tuple)):
-        title = f"green: {title[0]}   |   red: {title[1]}"
+        title = f"{name1}: {title[0]}   |   {name2}: {title[1]}"
     pl = pyvista.Plotter(title = title)
     pl.enable_terrain_style(mouse_wheel_zooms=True, shift_pans=True)
 
-    # colorblind-friendly schemes (per https://davidmathlogic.com/colorblind)
-    schemes = [
-        (0, 250, 0), # green/red(dish) https://davidmathlogic.com/colorblind/#%2300FA00-%23FA00FA
-        (0, 100, 250), # blue/orange https://davidmathlogic.com/colorblind/#%23FA9600-%230064FA
-        (100, 75, 250), # purple/yellow https://davidmathlogic.com/colorblind/#%23E1FA4B-%23644BFA
-    ]
-    
     # complementary colors
-    c1 = schemes[scheme]
-    c2 = tuple(250 + min(c1) - c for c in c1)
+    color2 = tuple(250 + min(color1) - c for c in color1)
 
     # completely opaque doesn't work
     alpha = min(alpha, 0.99)
 
-    pl.add_mesh(convert(o1), color=c1, opacity=alpha, **kwargs)
-    pl.add_mesh(convert(o2), color=c2, opacity=alpha, **kwargs)
+    pl.add_mesh(convert(o1), color=color1, opacity=alpha, **kwargs)
+    pl.add_mesh(convert(o2), color=color2, opacity=alpha, **kwargs)
 
     pl.show()
 
@@ -73,18 +76,36 @@ def load(path):
         return pyvista.read(path)
 
 
-def from_files(path1, path2, title=None):
+def from_files(path1, path2, scheme="1", title=None):
     if title is None:
         title = (path1, path2)
     o1 = load(path1)
     o2 = load(path2)
-    diff(o1, o2, title=title)
+    diff(o1, o2, scheme=scheme, title=title)
 
 
 if __name__ == "__main__":
-    import sys
+
+    #import sys
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog = 'diff3d',
+        description = 'Visual diff for 3d files',
+    )
+    
+    parser.add_argument('file1')
+    parser.add_argument('file2')
+    parser.add_argument(
+        '-s', '--scheme',
+        choices = color_schemes.keys(),
+        default = "1",
+        help = "Color scheme",
+    )
+    args = parser.parse_args()
+
     pyvista.global_theme.line_width = 3
     pyvista.global_theme.point_size = 8
     pyvista.global_theme.window_size = (1500, 1500)
-    from_files(sys.argv[1], sys.argv[2])
+    from_files(args.file1, args.file2, scheme=args.scheme)
 

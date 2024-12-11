@@ -1,7 +1,8 @@
 This Python program provides a simple and robust way to visually
 compare 3d files such as STL, OBJ, 3MF, and STEP. The unchanged parts
 of the objects are shown in gray, while the changed parts are shown in
-contrasting colors that stand out, as in the following example.
+contrasting colors that stand out, illustrated by the following
+example.
 
 <img src="examples/lens-clamp.png" width="50%">
 
@@ -10,6 +11,7 @@ in gray, while the differing parts are displayed in red for one file
 and green for the other file. In the red file the tabs were longer,
 while in the green file the base was longer, and the threaded hole has
 been moved.
+
 
 ### Quick start
 
@@ -28,6 +30,7 @@ zoom, and shift-drag to pan.
 If there is enough interest I'll look into publishing this as a
 pip-installable package.
 
+
 ### Supported formats and object types
 
 Out of the box diff3d supports STL, OBJ, and 3MF files. Support for a
@@ -39,7 +42,20 @@ like intersection and difference, this tool is robust and is not
 limited to manifold (close surface) meshes, but can diff anything that
 can be rendered, including open surfaces, curves, and points.
 
+
 ### Color schemes
+
+Three color schemes designed to be colorblind-friendly are
+provided. (This is based on information from
+https://davidmathlogic.com/colorblind, and I have not verified
+this. If you have information to add please contact me by opening an
+issue on github.)
+
+<img src="examples/scheme1.png" width="30%"><img src="examples/scheme2.png" width="30%"><img src="examples/scheme3.png" width="30%">
+
+You can choose a scheme using the `-s` or `--scheme` option.  The
+above schemes are named "1", "2", and "3" respectively.
+
 
 ### API
 
