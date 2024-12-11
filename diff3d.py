@@ -50,6 +50,22 @@ def load(path):
         points = [tuple(p) for p in points]
         print(f"{len(points)} points, {len(faces)} faces")
         return pv.PolyData.from_regular_faces(points, faces)
+    elif path.endswith(".3mf"):
+        import lib3mf
+        wrapper = lib3mf.Wrapper()
+        model = wrapper.CreateModel()
+        model.QueryReader("3mf").ReadFromFile(path)
+        blocks = pv.MultiBlock()
+        items = model.GetBuildItems()
+        while items.MoveNext():
+            item = items.GetCurrent()
+            res = item.GetObjectResource()
+            vertices = res.GetVertices()
+            triangles = res.GetTriangleIndices()
+            points = [v.Coordinates for v in vertices]
+            faces = [t.Indices for t in triangles]
+            blocks.append(pv.PolyData.from_regular_faces(points, faces))
+        return blocks
     else:
         return pv.read(path)
 
