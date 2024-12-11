@@ -1,8 +1,6 @@
-import pyvista as pv
+import pyvista
 
 def diff(o1, o2, scheme=0, alpha=0.25, title="diff3d", **kwargs):
-
-    window_size = (1500, 1500)
 
     # for interoperability with other vtk-based libraries
     # TODO: add more?
@@ -13,14 +11,14 @@ def diff(o1, o2, scheme=0, alpha=0.25, title="diff3d", **kwargs):
 
     # accept lists and tuples of objects
     if isinstance(o1, (list,tuple)):
-        o1 = pv.MultiBlock([convert(o) for o in o1])
+        o1 = pyvista.MultiBlock([convert(o) for o in o1])
     if isinstance(o2, (list,tuple)):
-        o2 = pv.MultiBlock([convert(o) for o in o2])
+        o2 = pyvista.MultiBlock([convert(o) for o in o2])
 
     # configure plotter
     if isinstance(title, (list,tuple)):
         title = f"green: {title[0]}   |   red: {title[1]}"
-    pl = pv.Plotter(window_size = window_size, title = title)
+    pl = pyvista.Plotter(title = title)
     pl.enable_terrain_style(mouse_wheel_zooms=True, shift_pans=True)
 
     # colorblind-friendly schemes (per https://davidmathlogic.com/colorblind)
@@ -42,6 +40,7 @@ def diff(o1, o2, scheme=0, alpha=0.25, title="diff3d", **kwargs):
 
     pl.show()
 
+
 def load(path):
     if path.endswith(".step") or path.endswith(".stp"):
         try:
@@ -53,13 +52,13 @@ def load(path):
         points, faces = step.tessellate(tolerance=0.1)
         points = [tuple(p) for p in points]
         print(f"{len(points)} points, {len(faces)} faces")
-        return pv.PolyData.from_regular_faces(points, faces)
+        return pyvista.PolyData.from_regular_faces(points, faces)
     elif path.endswith(".3mf"):
         import lib3mf
         wrapper = lib3mf.Wrapper()
         model = wrapper.CreateModel()
         model.QueryReader("3mf").ReadFromFile(path)
-        blocks = pv.MultiBlock()
+        blocks = pyvista.MultiBlock()
         items = model.GetBuildItems()
         while items.MoveNext():
             item = items.GetCurrent()
@@ -68,13 +67,12 @@ def load(path):
             triangles = res.GetTriangleIndices()
             points = [v.Coordinates for v in vertices]
             faces = [t.Indices for t in triangles]
-            blocks.append(pv.PolyData.from_regular_faces(points, faces))
+            blocks.append(pyvista.PolyData.from_regular_faces(points, faces))
         return blocks
     else:
-        return pv.read(path)
+        return pyvista.read(path)
 
 
-    
 def from_files(path1, path2, title=None):
     if title is None:
         title = (path1, path2)
@@ -82,10 +80,11 @@ def from_files(path1, path2, title=None):
     o2 = load(path2)
     diff(o1, o2, title=title)
 
+
 if __name__ == "__main__":
     import sys
-    pv.global_theme.line_width = 3
-    pv.global_theme.point_size = 8
-    pv.global_theme.window_size = (1500, 1500)
+    pyvista.global_theme.line_width = 3
+    pyvista.global_theme.point_size = 8
+    pyvista.global_theme.window_size = (1500, 1500)
     from_files(sys.argv[1], sys.argv[2])
 
