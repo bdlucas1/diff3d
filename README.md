@@ -11,7 +11,7 @@ and green for the other file. In the red file the tabs were longer,
 while in the green file the base was longer, and the threaded hole has
 been moved.
 
-##Quick start
+### Quick start
 
     git clone https://github.com/bdlucas1/diff3d
     cd diff3d
@@ -28,7 +28,7 @@ zoom, and shift-drag to pan.
 If there is enough interest I'll look into publishing this as a
 pip-installable package.
 
-##Supported formats and object types
+### Supported formats and object types
 
 Out of the box diff3d supports STL, OBJ, and 3MF files. Support for a
 number of additional file types is available by installing `meshio`,
@@ -39,9 +39,9 @@ like intersection and difference, this tool is robust and is not
 limited to manifold (close surface) meshes, but can diff anything that
 can be rendered, including open surfaces, curves, and points.
 
-##Color schemes
+### Color schemes
 
-##API
+### API
 
 The diff3d module provides a simple API if you want to integrate it
 into your own program. See the code for details.
