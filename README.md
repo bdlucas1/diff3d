@@ -43,7 +43,7 @@ and support for STEP files can be enabled by installing `build123d`.
 
 Unlike other tools that do 3d diffs by using 3d boolean operations
 like intersection and difference, this tool is robust and is not
-limited to manifold (close surface) meshes, but can diff anything that
+limited to manifold (closed surface) meshes, but can diff anything that
 can be rendered, including open surfaces, curves, and points.
 
 
