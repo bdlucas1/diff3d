@@ -38,8 +38,11 @@ def diff(o1, o2, scheme="1", alpha=0.25, title="diff3d", **kwargs):
     # completely opaque doesn't work
     alpha = min(alpha, 0.99)
 
-    pl.add_mesh(convert(o1), color=color1, opacity=alpha, **kwargs)
-    pl.add_mesh(convert(o2), color=color2, opacity=alpha, **kwargs)
+    if o2:
+        pl.add_mesh(convert(o1), color=color1, opacity=alpha, **kwargs)
+        pl.add_mesh(convert(o2), color=color2, opacity=alpha, **kwargs)
+    else:
+        pl.add_mesh(o1)
 
     pl.show()
 
@@ -78,11 +81,10 @@ def load(path):
 
 def from_files(path1, path2, scheme="1", title=None):
     if title is None:
-        title = (path1, path2)
+        title = (path1, path2) if path2 else path1
     o1 = load(path1)
-    o2 = load(path2)
+    o2 = load(path2) if path2 else None
     diff(o1, o2, scheme=scheme, title=title)
-
 
 if __name__ == "__main__":
 
@@ -95,7 +97,7 @@ if __name__ == "__main__":
     )
     
     parser.add_argument('file1')
-    parser.add_argument('file2')
+    parser.add_argument('file2', nargs='?')
     parser.add_argument(
         '-s', '--scheme',
         choices = color_schemes.keys(),
@@ -104,6 +106,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    pyvista.global_theme.color = (0.70, 0.80, 1.0)
     pyvista.global_theme.line_width = 3
     pyvista.global_theme.point_size = 8
     pyvista.global_theme.window_size = (1500, 1500)

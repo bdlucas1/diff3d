@@ -27,6 +27,10 @@ the startup time will be very quick.
 You can drag the displayed object to rotate it, use the mouse wheel to
 zoom, and shift-drag to pan.
 
+The second file is optional, in which case the first file will simply
+be displayed without diffs. This allows the tool to be used as a
+simple 3d file viewer in addition to its primary function.
+
 If there is enough interest I'll look into publishing this as a
 pip-installable package.
 
