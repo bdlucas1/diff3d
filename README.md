@@ -8,9 +8,9 @@ example.
 
 In this example most of the lens clamp is unchanged and is displayed
 in gray, while the differing parts are displayed in red for one file
-and green for the other file: in the red file the diameter was smaller,
-while in the green file the base was longer, and the threaded hole has
-been moved.
+and green for the other file: in the red file the diameter is smaller,
+while in the green file the base is longer, and the threaded hole has
+moved.
 
 
 ### Quick start
