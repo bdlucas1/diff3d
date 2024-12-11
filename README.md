@@ -1,4 +1,4 @@
-This Python program provides a simple and robust way to visually
+This Python program provides a simple, fast, and robust way to visually
 compare 3d files such as STL, OBJ, 3MF, and STEP. The unchanged parts
 of the objects are shown in gray, while the changed parts are shown in
 contrasting colors that stand out, illustrated by the following
