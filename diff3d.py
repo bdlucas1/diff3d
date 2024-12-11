@@ -44,7 +44,11 @@ def diff(o1, o2, scheme=0, alpha=0.25, title="diff3d", **kwargs):
 
 def load(path):
     if path.endswith(".step") or path.endswith(".stp"):
-        import build123d
+        try:
+            import build123d
+        except ModuleNotFoundError:
+            print("For STEP file support please install build123d")
+            exit()
         step = build123d.importers.import_step(path)
         points, faces = step.tessellate(tolerance=0.1)
         points = [tuple(p) for p in points]
@@ -69,6 +73,8 @@ def load(path):
     else:
         return pv.read(path)
 
+
+    
 def from_files(path1, path2, title=None):
     if title is None:
         title = (path1, path2)

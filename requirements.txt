@@ -1,3 +1,9 @@
 pyvista
-build123d # for .step file support
-lib3mf # for .3mf file support
+
+# for .3mf file support
+lib3mf
+
+# for .step file support
+# not installing this by default because doesn't have Python3.13 version (as of 2024-12-11)
+#build123d
+
