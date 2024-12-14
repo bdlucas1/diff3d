@@ -16,6 +16,7 @@ def diff(o1, o2, scheme="1", alpha=0.25, title="diff3d", **kwargs):
         if "vedo" in str(type(o)):
             o = o.dataset
         return o
+    o1, o2 = convert(o1), convert(o2)
 
     # accept lists and tuples of objects
     if isinstance(o1, (list,tuple)):
@@ -38,11 +39,48 @@ def diff(o1, o2, scheme="1", alpha=0.25, title="diff3d", **kwargs):
     # completely opaque doesn't work
     alpha = min(alpha, 0.99)
 
+    """
     if o2:
         pl.add_mesh(convert(o1), color=color1, opacity=alpha, **kwargs)
         pl.add_mesh(convert(o2), color=color2, opacity=alpha, **kwargs)
     else:
         pl.add_mesh(o1)
+    """
+
+    def mute(c, x):
+        import numpy as np
+        c = np.array(c) / 255
+        muted = (c + 1 * np.array([1,1,1])) / 2
+        c = (1-x) * c + x * muted
+        return c
+
+    def callback(x):
+        if -0.15 < x < 0.15:
+            x = 0
+        c1, c2 = color1, color2
+        if x < 0:
+            y = x + 1  # 0 to 1
+            alpha1 = 1 * (1-y) + alpha * y
+            alpha2 = 0 * (1-y) + alpha * y
+            c1 = mute(color1, -x)
+        else:
+            alpha1 = alpha * (1-x) + 0 * x
+            alpha2 = alpha * (1-x) + 1 * x
+            c2 = mute(color2, x)
+
+        if hasattr(pl, "actor1"):
+            pl.remove_actor(pl.actor1, render=False)
+            pl.remove_actor(pl.actor2, render=False)
+        pl.actor1 = pl.add_mesh(o1, color=c1, opacity=alpha1, **kwargs, render=False)
+        pl.actor2 = pl.add_mesh(o2, color=c2, opacity=alpha2, **kwargs, render=False)
+        pl.render()
+
+    pl.add_slider_widget(
+        callback, (-1,1), value=0, interaction_event="always",
+        style="modern", pointa=(0.2,0.99), pointb=(0.8,0.99),
+    )
+
+    callback(0)
 
     pl.show()
 
