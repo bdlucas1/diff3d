@@ -37,8 +37,9 @@ pip-installable package.
 
 ### Supported platforms, file formats, and object types
 
-I have only tested this on MacOS with Python 3.12 and 3.13. If you
-have information about the status of other platforms please let me know.
+I have only tested this on MacOS with Python 3.12 and 3.13, but as far
+as I know it should work on Windows and Linux. If you have information
+about the status of those platforms please let me know.
 
 Out of the box diff3d supports STL, OBJ, and 3MF files. Support for a
 number of additional file types is available by installing `meshio`,
