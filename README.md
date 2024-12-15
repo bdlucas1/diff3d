@@ -17,6 +17,8 @@ moved.
 
     git clone https://github.com/bdlucas1/diff3d
     cd diff3d
+    python -m venv .venv
+    source .venv/bin/activate
     pip install -r requirements.txt
     python diff3d.py examples/lens-clamp-A.stl examples/lens-clamp-B.stl
 
