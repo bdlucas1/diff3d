@@ -20,6 +20,11 @@ moved.
     pip install -r requirements.txt
     python diff3d.py examples/lens-clamp-A.stl examples/lens-clamp-B.stl
 
+Note that if you have Python installed but don't happen to have git you
+can just download the files individually from github. All you reall need
+is to download `diff3d.py` and to `pip install pyvista`.  If there is enough
+interest I'll look into publishing this as a pip-installable package.
+
 The diff3d command may take up to about a minute to run the first time
 while it loads and compiles the supporting packages, but after that
 the startup time will be very quick.
@@ -30,9 +35,6 @@ zoom, and shift-drag to pan.
 The second file is optional, in which case the first file will simply
 be displayed without diffs. This allows the tool to be used as a
 simple 3d file viewer in addition to its primary function.
-
-If there is enough interest I'll look into publishing this as a
-pip-installable package.
 
 
 ### Supported platforms, file formats, and object types
