@@ -15,21 +15,29 @@ moved.
 
 ### Quick start
 
-    git clone https://github.com/bdlucas1/diff3d
-    cd diff3d
-    python -m venv .venv
-    source .venv/bin/activate
-    pip install -r requirements.txt
-    python diff3d.py examples/lens-clamp-A.stl examples/lens-clamp-B.stl
+You will need to have Python installed. Python comes with a program
+called `pip` for installing Python programs at the system level. To
+install diff3d run this command:
 
-Note that if you have Python installed but don't happen to have git you
-can just download the files individually from github. All you reall need
-is to download `diff3d.py` and to `pip install pyvista`.  If there is enough
-interest I'll look into publishing this as a pip-installable package.
+    pip install https://github.com/bdlucas1/diff3d/archive/master.zip
 
-The diff3d command may take up to about a minute to run the first time
-while it loads and compiles the supporting packages, but after that
-the startup time will be very quick.
+In some more recent versions of Python you may get an error that the
+Python installation is managed by the OS, meaning that you can't install
+packages like `diff3d` directly into the system. In that case you can
+[install pipx](https://pipx.pypa.io/stable/installation/) and use
+`pipx` in place of `pip` in the command above.
+
+Then to test the installation download two test files
+[lens-clamp-A.stl](https://github.com/bdlucas1/diff3d/blob/master/examples/lens-clamp-A.stl)
+and
+[lens-clamp-B.stl](https://github.com/bdlucas1/diff3d/blob/master/examples/lens-clamp-B.stl)
+and run the command
+
+    diff3d lens-clamp-A.stl lens-clamp-B.stl
+
+The `diff3d` command may take up to about a minute to run the first
+time while it loads and compiles the supporting packages, but after
+that the startup time will be very quick.
 
 You can drag the displayed object to rotate it, use the mouse wheel to
 zoom, and shift-drag to pan.
