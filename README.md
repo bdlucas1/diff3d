@@ -17,7 +17,7 @@ moved.
 
 You will need to have Python installed. Python comes with a program
 called `pip` for installing Python programs at the system level. To
-install diff3d run this command:
+install `diff3d` run this command:
 
     pip install https://github.com/bdlucas1/diff3d/archive/master.zip
 
@@ -53,7 +53,7 @@ I have only tested this on MacOS with Python 3.12 and 3.13, but as far
 as I know it should work on Windows and Linux. If you have information
 about the status of those platforms please let me know.
 
-Out of the box diff3d supports STL, OBJ, and 3MF files. Support for a
+Out of the box `diff3d` supports STL, OBJ, and 3MF files. Support for a
 number of additional file types is available by installing `meshio`,
 and support for STEP files can be enabled by installing `build123d`.
 
@@ -79,7 +79,7 @@ above schemes are named "1", "2", and "3" respectively.
 
 ### API
 
-The diff3d module provides a simple API if you want to integrate it
+The `diff3d` module provides a simple API if you want to integrate it
 into your own program. See the code for details.
 
 * `diff3d.from_files` opens a window displaying the diff between two files
