@@ -22,9 +22,10 @@ install `diff3d` run this command:
     pip install https://github.com/bdlucas1/diff3d/archive/master.zip
 
 In some more recent versions of Python you may get an error that the
-Python installation is managed by the OS, meaning that you can't install
-packages like `diff3d` directly into the system. In that case you can
-[install pipx](https://pipx.pypa.io/stable/installation/) and use
+Python installation is managed by the OS, meaning that you can't use
+`pip` to install packages like `diff3d` directly into the system
+because the OS depends on a stable version of Python. In that case you
+can [install pipx](https://pipx.pypa.io/stable/installation/) and use
 `pipx` in place of `pip` in the command above.
 
 Then to test the installation download two test files
