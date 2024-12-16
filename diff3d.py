@@ -86,9 +86,8 @@ def from_files(path1, path2, scheme="1", title=None):
     o2 = load(path2) if path2 else None
     diff(o1, o2, scheme=scheme, title=title)
 
-if __name__ == "__main__":
+def cli():
 
-    #import sys
     import argparse
 
     parser = argparse.ArgumentParser(
@@ -112,3 +111,6 @@ if __name__ == "__main__":
     pyvista.global_theme.window_size = (1500, 1500)
     from_files(args.file1, args.file2, scheme=args.scheme)
 
+if __name__ == "__main__":
+    cli()
+    
