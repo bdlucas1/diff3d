@@ -17,8 +17,15 @@ moved.
 
     git clone https://github.com/bdlucas1/diff3d
     cd diff3d
+    python -m venv .venv
+    source .venv/bin/activate
     pip install -r requirements.txt
     python diff3d.py examples/lens-clamp-A.stl examples/lens-clamp-B.stl
+
+Note that if you have Python installed but don't happen to have git you
+can just download the files individually from github. All you reall need
+is to download `diff3d.py` and to `pip install pyvista`.  If there is enough
+interest I'll look into publishing this as a pip-installable package.
 
 The diff3d command may take up to about a minute to run the first time
 while it loads and compiles the supporting packages, but after that
@@ -31,14 +38,12 @@ The second file is optional, in which case the first file will simply
 be displayed without diffs. This allows the tool to be used as a
 simple 3d file viewer in addition to its primary function.
 
-If there is enough interest I'll look into publishing this as a
-pip-installable package.
-
 
 ### Supported platforms, file formats, and object types
 
-I have only tested this on MacOS with Python 3.12 and 3.13. If you
-have information about the status of other platforms please let me know.
+I have only tested this on MacOS with Python 3.12 and 3.13, but as far
+as I know it should work on Windows and Linux. If you have information
+about the status of those platforms please let me know.
 
 Out of the box diff3d supports STL, OBJ, and 3MF files. Support for a
 number of additional file types is available by installing `meshio`,
