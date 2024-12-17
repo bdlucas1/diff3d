@@ -19,7 +19,7 @@ You will need to have Python installed. Python comes with a program
 called `pip` for installing Python programs at the system level. To
 install `diff3d` run this command:
 
-    pip install https://github.com/bdlucas1/diff3d/archive/master.zip
+    pip install diff3d
 
 In some more recent versions of Python you may get an error that the
 Python installation is managed by the OS, meaning that you can't use
