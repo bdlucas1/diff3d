@@ -4,7 +4,7 @@ of the objects are shown in gray, while the changed parts are shown in
 contrasting colors that stand out, illustrated by the following
 example.
 
-<img src="examples/scheme1.png" width="50%">
+<img src="https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/scheme1.png" width="50%">
 
 In this example most of the lens clamp is unchanged and is displayed
 in gray, while the differing parts are displayed in red for one file
@@ -29,9 +29,9 @@ can [install pipx](https://pipx.pypa.io/stable/installation/) and use
 `pipx` in place of `pip` in the command above.
 
 Then to test the installation download two test files
-[lens-clamp-A.stl](https://github.com/bdlucas1/diff3d/blob/master/examples/lens-clamp-A.stl)
+[lens-clamp-A.stl](https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/lens-clamp-A.stl)
 and
-[lens-clamp-B.stl](https://github.com/bdlucas1/diff3d/blob/master/examples/lens-clamp-B.stl)
+[lens-clamp-B.stl](https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/lens-clamp-B.stl)
 and run the command
 
     diff3d lens-clamp-A.stl lens-clamp-B.stl
@@ -52,7 +52,7 @@ simple 3d file viewer in addition to its primary function.
 
 I use MacOS, but I believe this tool works on Windows and Linux
 as well. I have tested it with Python 3.12 and 3.13, but I think
-it will work on some somewhat older versions of Python as well.
+it will also work on some somewhat older versions of Python.
 
 Out of the box `diff3d` supports STL, OBJ, and 3MF files. Support for a
 number of additional file types is available by installing `meshio`,
@@ -72,7 +72,7 @@ https://davidmathlogic.com/colorblind, and I have not verified
 this. If you have information to add please contact me by opening an
 issue on github.)
 
-<img src="examples/scheme1.png" width="30%"><img src="examples/scheme2.png" width="30%"><img src="examples/scheme3.png" width="30%">
+<img src="https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/scheme1.png" width="30%"><img src="https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/scheme2.png" width="30%"><img src="https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/scheme3.png" width="30%">
 
 You can choose a scheme using the `-s` or `--scheme` option.  The
 above schemes are named "1", "2", and "3" respectively.

@@ -1,0 +1,29 @@
+[project]
+name = "diff3d"
+version = "0.0.0rc1"
+authors = [{name = "Bruce D. Lucas"}]
+description = "Fast visual diff for 3d files"
+readme = "README.md"
+dependencies = [
+    "pyvista",
+    "lib3mf",
+    #"build123d",
+]
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/bdlucas1/diff3d"
+Issues = "https://github.com/bdlucas1/diff3d/issues"
+Discussions = "https://github.com/bdlucas1/diff3d/discussions"
+
+[project.scripts]
+diff3d = "diff3d:cli"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
