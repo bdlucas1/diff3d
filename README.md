@@ -50,9 +50,9 @@ simple 3d file viewer in addition to its primary function.
 
 ### Supported platforms, file formats, and object types
 
-I have only tested this on MacOS with Python 3.12 and 3.13, but as far
-as I know it should work on Windows and Linux. If you have information
-about the status of those platforms please let me know.
+I use MacOS, but I believe this tool works on Windows and Linux
+as well. I have tested it with Python 3.12 and 3.13, but I think
+it will work on some somewhat older versions of Python as well.
 
 Out of the box `diff3d` supports STL, OBJ, and 3MF files. Support for a
 number of additional file types is available by installing `meshio`,
