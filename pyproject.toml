@@ -2,7 +2,7 @@
 name = "diff3d"
 version = "0.1.0"
 authors = [{name = "Bruce D. Lucas"}]
-description = "Fast visual diff for 3d files"
+description = "Fast visual 3d diff for STL, OBJ, 3MF, and STEP files"
 readme = "README.md"
 dependencies = [
     "pyvista",
