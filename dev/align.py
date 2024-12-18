@@ -3,12 +3,14 @@ import numpy as np
 import scipy
 
 # for each point find and return the closest point on the mesh to that point
+# returned points are not necessarily mesh vertex points
 def find_closest(mesh, points):
     _, closest = mesh.find_closest_cell(points, return_closest_point=True)    
     return closest
 
 # place approximately n sample points on the mesh
-# this will give roughly equal weight to the mesh by area
+# this will give roughly equal weight to all parts of the mesh by area
+# using the mesh vertex points may wildly over-weight areas of high detail
 def sample_points(mesh, n):
 
     # compute a cell size based on area of mesh such that
@@ -61,7 +63,11 @@ def align(stationary, moving, n=5000):
         return sqdists
 
     # minimize total penalty for a given initial delta, tolerance, and penalty function
-    # penalty is a function of the array of squared distances
+    # penalty is a function of the array of squared distances, e.g.
+    #     sum of squared distances
+    #     negative sum of exp of negative squared distances (i.e. gaussian)
+    # "L-BFGS-B" minimization method had by far fewer goal function executions
+    # which is important here because they are expensive
     def minimize(delta, tol, penalty):
         print(f"start {delta}, tol {tol}")
         fun = lambda x: penalty(sqdists(x))
