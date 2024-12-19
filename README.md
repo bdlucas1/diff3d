@@ -96,7 +96,10 @@ the `--align` flag:
     diff3d --align lens-clamp-A.obj lens-clamp-C.obj
 
 This is not the default because it's not always necessary and it may
-take a bit of time to do the alignment
+take a bit of time to do the alignment.  The first time you use the
+`--align` option it may take up to about half a minute to load and
+compile the necessary libraries, but after that it will start much
+faster.
 
 
 ### Color schemes
