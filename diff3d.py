@@ -1,6 +1,3 @@
-import pyvista
-import align3d
-
 # colorblind-friendly color schemes per https://davidmathlogic.com/colorblind
 color_schemes = {
     "1": ("green", "red", (0, 250, 0)),
@@ -10,6 +7,9 @@ color_schemes = {
 
 
 def diff(o1, o2, scheme="1", alpha=0.25, title="diff3d", align=False, width_pcts=None, **kwargs):
+
+    import pyvista
+    import align3d
 
     # for interoperability with other vtk-based libraries
     # TODO: add more?
@@ -57,6 +57,9 @@ def diff(o1, o2, scheme="1", alpha=0.25, title="diff3d", align=False, width_pcts
 
 
 def load(path):
+
+    import pyvista
+
     if path.endswith(".step") or path.endswith(".stp"):
         try:
             import build123d
@@ -90,6 +93,8 @@ def load(path):
 
 
 def from_files(path1, path2, scheme="1", title=None, align=False, width_pcts=None):
+
+    import pyvista
 
     pyvista.global_theme.color = (0.70, 0.80, 1.0)
     pyvista.global_theme.line_width = 3
