@@ -31,7 +31,7 @@ def sample_points(mesh, n):
     zs = np.arange(zmin, zmax+cell_size, cell_size)
     grid = np.array([(x,y,z) for x in xs for y in ys for z in zs])
     print(f"{len(grid)} grid points")
-    if viz: viz.show(mesh, grid)
+    if viz: viz.show("mesh with 3d grid", mesh, grid)
 
     # find the closest point on the mesh to each grid point
     closest = find_closest(mesh, grid)
@@ -40,14 +40,13 @@ def sample_points(mesh, n):
     # sanity check: there should be no (or very few) duplicates
     points = [p for p, g in zip(closest, grid) if np.max(np.abs(p-g)) <= cell_size/2]
     print(f"{len(points)} close points; {len(set(tuple(p) for p in points))} without duplicates")
-    if viz: viz.show(points) #viz.show(mesh.alpha(0.2), points)
+    if viz: viz.show("sample points", points) #viz.show(mesh.alpha(0.2), points)
 
     return points, cell_size
 
 # align two meshes by moving one
-# returns the moved mesh
-# n is the number of sample points to place on the moving mesh
-def align(stationary, moving, n=5000, width_pct=1, viz=False):
+# returns the delta that can be used to translate moving to align it with stationary
+def align(stationary, moving, n=2000, width_pcts=(np.inf, 8, 2, 0.5), tol_rel=1e-5):
 
     # place approximately n sample points on the moving_points mesh
     moving_points, cell_size = sample_points(moving, n)
@@ -62,53 +61,35 @@ def align(stationary, moving, n=5000, width_pct=1, viz=False):
         deltas = closest - points
         sqdists = np.array([np.dot(d, d) for d in deltas])
 
-        if viz: viz.show(stationary, closest)
+        #if viz: viz.show(stationary, closest)
         print(f"delta: [{delta[0]:.3f} {delta[1]:.3f} {delta[2]:.3f}]")
 
         return sqdists
 
-    # minimize total penalty for a given initial delta, tolerance, and penalty function
-    # penalty is a function of the array of squared distances, e.g.
-    #     sum of squared distances (first pass minimize)
-    #     gaussian: negative sum of exp of negative squared distances (second pass minimize)
-    # "L-BFGS-B" minimization method had by far fewer goal function executions
+    # minimize total penalty for a given initial delta, tolerance, and width_pc
+    # width_pct is width of gaussian penalty function in percent of object size
+    # width_pct of inf means least squares
+    # "L-BFGS-B" minimization method had by far fewer goal function executions,
     # which is important here because they are expensive
-    def minimize(delta0, tol, penalty):
-        print(f"minimize pass, tol: {tol:.1g}")
-        fun = lambda x: penalty(sqdists(x))
-        result = scipy.optimize.minimize(fun, x0=delta0.tolist(), method="L-BFGS-B", tol=tol)
-        return result.x
-    
-    # compute size-based algorithm parameters
     xmin, xmax, ymin, ymax, zmin, zmax = stationary.bounds
     size = np.sqrt((xmax-xmin)**2 + (ymax-ymin)**2 + (zmax-zmin)**2)
-    tol1 = size * 1e-4               # first pass tolerance
-    tol2 = size * 1e-6               # second pass tolerance
-    width2 = size * width_pct / 100  # second pass width (inverse sharpness) of gaussian
+    def minimize(delta0, width_pct):
+        print(f"minimize pass, size {size:.1f}, tol_rel {tol_rel:.1g}, width_pct {width_pct:.2f}")
+        if width_pct == np.inf:
+            fun = lambda x: sum(sqdists(x))
+        else:
+            sqwidth = (size * width_pct / 100) ** 2
+            fun = lambda x: -sum(np.exp(-sqdists(x) / sqwidth))
+        result = scipy.optimize.minimize(fun, x0=delta0.tolist(), method="L-BFGS-B", tol=tol_rel * size)
+        return result.x
 
-    # initial guess is to align centroids
+    # initial guess: align centroids
     delta = np.average(stationary.points, axis=0) - np.average(moving.points, axis=0)
 
-    # minimize penalty using sum of squared distances
-    delta = minimize(delta, tol = tol1, penalty = lambda sqdists: sum(sqdists))
+    # multiple minimization passes at different widths
+    for width_pct in width_pcts:
+        delta = minimize(delta, width_pct)
 
-    # now minimize further using a sharper penalty function that ignores points that aren't close
-    delta = minimize(delta, tol = tol2, penalty = lambda sqdists: -sum(np.exp(-sqdists/width2)))
+    # caller can translate moving by delta to align
+    return delta
 
-    # move it and return
-    return moving.translate(delta)
-
-if __name__ == "__main__":
-
-    import viz
-    import lib
-
-    # TODO: generate and test some more examples
-    stationary = lib.load("../examples/lens-clamp-A.obj").scale((1000, 1000, 1000))
-    moving = lib.load("../examples/lens-clamp-B.obj").scale((1000, 1000, 1000))
-
-    moving = moving.translate(100,100,100)
-    #viz.show_diff(stationary, moving)
-
-    moving = align(stationary, moving, width_pct=100, debug=True)
-    viz.show_diff(stationary, moving)
