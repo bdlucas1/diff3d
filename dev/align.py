@@ -2,6 +2,8 @@ import math
 import numpy as np
 import scipy
 
+viz = None
+
 # for each point find and return the closest point on the mesh to that point
 # returned points are not necessarily mesh vertex points
 def find_closest(mesh, points):
@@ -29,7 +31,7 @@ def sample_points(mesh, n):
     zs = np.arange(zmin, zmax+cell_size, cell_size)
     grid = np.array([(x,y,z) for x in xs for y in ys for z in zs])
     print(f"{len(grid)} grid points")
-    #viz.show(mesh, grid)
+    if viz: viz.show(mesh, grid)
 
     # find the closest point on the mesh to each grid point
     closest = find_closest(mesh, grid)
@@ -38,14 +40,14 @@ def sample_points(mesh, n):
     # sanity check: there should be no (or very few) duplicates
     points = [p for p, g in zip(closest, grid) if np.max(np.abs(p-g)) <= cell_size/2]
     print(f"{len(points)} close points; {len(set(tuple(p) for p in points))} without duplicates")
-    #viz.show(mesh, points)
+    if viz: viz.show(points) #viz.show(mesh.alpha(0.2), points)
 
     return points, cell_size
 
 # align two meshes by moving one
 # returns the moved mesh
 # n is the number of sample points to place on the moving mesh
-def align(stationary, moving, n=5000):
+def align(stationary, moving, n=5000, width_pct=1, viz=False):
 
     # place approximately n sample points on the moving_points mesh
     moving_points, cell_size = sample_points(moving, n)
@@ -60,7 +62,7 @@ def align(stationary, moving, n=5000):
         deltas = closest - points
         sqdists = np.array([np.dot(d, d) for d in deltas])
 
-        #viz.show(stationary, closest)
+        if viz: viz.show(stationary, closest)
         print(f"delta: [{delta[0]:.3f} {delta[1]:.3f} {delta[2]:.3f}]")
 
         return sqdists
@@ -80,9 +82,9 @@ def align(stationary, moving, n=5000):
     # compute size-based algorithm parameters
     xmin, xmax, ymin, ymax, zmin, zmax = stationary.bounds
     size = np.sqrt((xmax-xmin)**2 + (ymax-ymin)**2 + (zmax-zmin)**2)
-    tol1 = size * 1e-4   # first pass tolerance
-    tol2 = size * 1e-6   # second pass tolerance
-    width2 = size / 100  # second pass width (inverse sharpness) of gaussian
+    tol1 = size * 1e-4               # first pass tolerance
+    tol2 = size * 1e-6               # second pass tolerance
+    width2 = size * width_pct / 100  # second pass width (inverse sharpness) of gaussian
 
     # initial guess is to align centroids
     delta = np.average(stationary.points, axis=0) - np.average(moving.points, axis=0)
@@ -108,5 +110,5 @@ if __name__ == "__main__":
     moving = moving.translate(100,100,100)
     #viz.show_diff(stationary, moving)
 
-    moving = align(stationary, moving)
+    moving = align(stationary, moving, width_pct=100, debug=True)
     viz.show_diff(stationary, moving)
