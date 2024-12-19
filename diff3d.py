@@ -1,4 +1,5 @@
 import pyvista
+import align3d
 
 # colorblind-friendly color schemes per https://davidmathlogic.com/colorblind
 color_schemes = {
@@ -8,7 +9,7 @@ color_schemes = {
 }
 
 
-def diff(o1, o2, scheme="1", alpha=0.25, title="diff3d", **kwargs):
+def diff(o1, o2, scheme="1", alpha=0.25, title="diff3d", align=False, width_pcts=None, **kwargs):
 
     # for interoperability with other vtk-based libraries
     # TODO: add more?
@@ -22,6 +23,14 @@ def diff(o1, o2, scheme="1", alpha=0.25, title="diff3d", **kwargs):
         o1 = pyvista.MultiBlock([convert(o) for o in o1])
     if isinstance(o2, (list,tuple)):
         o2 = pyvista.MultiBlock([convert(o) for o in o2])
+
+    # align if requested
+    if align and o2 is not None:
+        print("aligning...", end="", flush=True)
+        dot = lambda _: print(".", end="", flush=True)
+        delta = align3d.align(o1, o2, dot, width_pcts=width_pcts)
+        print()
+        o2 = o2.translate(delta)
 
     # get color scheme information
     name1, name2, color1 = color_schemes[scheme]
@@ -74,42 +83,47 @@ def load(path):
             points = [v.Coordinates for v in vertices]
             faces = [t.Indices for t in triangles]
             blocks.append(pyvista.PolyData.from_regular_faces(points, faces))
-        return blocks
+        merged = pyvista.merge(blocks)
+        return merged
     else:
         return pyvista.read(path)
 
 
-def from_files(path1, path2, scheme="1", title=None):
+def from_files(path1, path2, scheme="1", title=None, align=False, width_pcts=None):
+
+    pyvista.global_theme.color = (0.70, 0.80, 1.0)
+    pyvista.global_theme.line_width = 3
+    pyvista.global_theme.point_size = 8
+    pyvista.global_theme.window_size = (1500, 1500)
+
     if title is None:
         title = (path1, path2) if path2 else path1
     o1 = load(path1)
     o2 = load(path2) if path2 else None
-    diff(o1, o2, scheme=scheme, title=title)
+    diff(o1, o2, scheme=scheme, title=title, align=align, width_pcts=width_pcts)
 
 def cli():
 
     import argparse
 
     parser = argparse.ArgumentParser(
-        prog = 'diff3d',
-        description = 'Visual diff for 3d files',
+        prog = "diff3d",
+        description = "Visual diff for 3d files",
     )
     
-    parser.add_argument('file1')
-    parser.add_argument('file2', nargs='?')
+    parser.add_argument("file1")
+    parser.add_argument("file2", nargs="?")
+    parser.add_argument("--align", "-a", action="store_true", help="Align models")
+    parser.add_argument("--widths", nargs="*", type=float)
     parser.add_argument(
-        '-s', '--scheme',
+        "--scheme", "-s",
         choices = color_schemes.keys(),
         default = "1",
         help = "Color scheme",
     )
     args = parser.parse_args()
 
-    pyvista.global_theme.color = (0.70, 0.80, 1.0)
-    pyvista.global_theme.line_width = 3
-    pyvista.global_theme.point_size = 8
-    pyvista.global_theme.window_size = (1500, 1500)
-    from_files(args.file1, args.file2, scheme=args.scheme)
+    from_files(args.file1, args.file2, scheme=args.scheme, align=args.align, width_pcts=args.widths)
 
 if __name__ == "__main__":
     cli()

@@ -29,7 +29,7 @@ can [install pipx](https://pipx.pypa.io/stable/installation/) and use
 `pipx` in place of `pip` in the command above.
 
 Then to test the installation download two test files
-[lens-clamp-A.stl](https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/lens-clamp-A.stl)
+[lens-clamp-A.stl](https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/lens-clamp-A.stl)a
 and
 [lens-clamp-B.stl](https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/lens-clamp-B.stl)
 and run the command
@@ -62,6 +62,41 @@ Unlike other tools that do 3d diffs by using 3d boolean operations
 like intersection and difference, this tool is robust and is not
 limited to manifold (closed surface) meshes, but can diff anything that
 can be rendered, including open surfaces, curves, and points.
+
+
+### Object alignment
+
+In some cases two objects to be compared may be shifted relative to
+each other in addition to other changes. This is illustrated by
+example files
+[lens-clamp-A.obj](https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/lens-clamp-A.obj)
+and
+[lens-clamp-C.obj](https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/lens-clamp-C.obj)
+alignments in the images below.
+
+<img src="examples/alignment1.png" width="30%"><img src="examples/alignment2.png" width="30%"><img src="examples/alignment3.png" width="30%">
+
+The first image is produced by just comparing the two files without
+any attempt to align them:
+
+    diff3d lens-clamp-A.obj lens-clamp-C.obj
+
+The misalignment obscures the relevant changes.
+
+The second image was produced by aligning the centroids of the two
+objects. This is better, but it is still difficult to see the
+interesting changes.
+
+Instead `diff3d` provides an alignment method that attempts to align
+the objects such that major features that they have in common are
+aligned, thus displaying a minimal set of differences between the
+objects. This is illustrated by the third image above, produced using
+the `--align` flag:
+
+    diff3d --align lens-clamp-A.obj lens-clamp-C.obj
+
+This is not the default because it's not always necessary and it may
+take a bit of time to do the alignment
 
 
 ### Color schemes
