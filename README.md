@@ -36,9 +36,9 @@ and run the command
 
     diff3d lens-clamp-A.stl lens-clamp-B.stl
 
-The `diff3d` command may take up to about a minute to run the first
-time while it loads and compiles the supporting packages, but after
-that the startup time will be very quick.
+The first time you run the `diff3d` command it may take a little time
+to start while it loads and compiles the supporting packages, but
+after that the startup time will be very quick.
 
 You can drag the displayed object to rotate it, use the mouse wheel to
 zoom, and shift-drag to pan.
@@ -72,12 +72,12 @@ example files
 [lens-clamp-A.obj](https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/lens-clamp-A.obj)
 and
 [lens-clamp-C.obj](https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/lens-clamp-C.obj)
-alignments in the images below.
+in the images below.
 
-<img src="examples/alignment1.png" width="30%"><img src="examples/alignment2.png" width="30%"><img src="examples/alignment3.png" width="30%">
+<img src="https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/alignment1.png" width="30%"><img src="https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/alignment2.png" width="30%"><img src="https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/alignment3.png" width="30%">
 
-The first image is produced by just comparing the two files without
-any attempt to align them:
+The first image is produced by just comparing the two files as-is
+without any attempt to align them:
 
     diff3d lens-clamp-A.obj lens-clamp-C.obj
 
@@ -96,10 +96,10 @@ the `--align` flag:
     diff3d --align lens-clamp-A.obj lens-clamp-C.obj
 
 This is not the default because it's not always necessary and it may
-take a bit of time to do the alignment.  The first time you use the
-`--align` option it may take up to about half a minute to load and
-compile the necessary libraries, but after that it will start much
-faster.
+take a bit of time to do the alignment. The first time you use the
+`--align` option it may take a little time to start while it loads and
+compiles the supporting packages, but after that the startup time will
+be very quick.
 
 
 ### Color schemes
