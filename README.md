@@ -22,12 +22,8 @@ level. To install `diff3d` run this command:
 
     pip install diff3d
 
-In some more recent versions of Python you may get an error that the
-Python installation is managed by the OS, meaning that you can't use
-`pip` to install packages like `diff3d` directly into the system
-because the OS depends on a stable version of Python. In that case you
-can [install pipx](https://pipx.pypa.io/stable/installation/) and use
-`pipx` in place of `pip` in the command above.
+(On some Linux systems you may need to use `pipx` instead of `pip`; see
+next section.)
 
 Then to test the installation download two test files
 [lens-clamp-A.stl](https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/lens-clamp-A.stl)a
@@ -57,8 +53,8 @@ I have tested on the following platforms:
   [python.org](https://www.python.org/downloads/), and in the
   installation program be sure to check the the box that says "Add
   python.exe to PATH" which will make `pip` and `diff3d` available
-  from the command line. The open a command prompt window and type
-  `pip intall diff3d`.
+  from the command line. Then open a command prompt window and type
+  `pip install diff3d`.
 
 * MacOS, Python 3.13 installed using `brew install python`, then `pip
   install diff3d`.
