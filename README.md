@@ -136,3 +136,5 @@ into your own program. See the code for details.
 * If you are using a different mesh or CAD package, if you can obtain
   point and triangle arrays, you can convert them to pyvista objects
   using `pyvista.PolyData.from_regular_faces`
+
+* You can align two meshes without displaying them using `diff3d.align3d`.
