@@ -53,9 +53,12 @@ simple 3d file viewer in addition to its primary function.
 
 I have tested on the following platforms:
 
-* Windows 11, Python 3.13 installed from
-  [python.org](https://www.python.org/downloads/), then `pip
-  install diff3d`.
+* Windows 11, Python 3.13. Download and install from
+  [python.org](https://www.python.org/downloads/), and in the
+  installation program be sure to check the the box that says "Add
+  python.exe to PATH" which will make `pip` and `diff3d` available
+  from the command line. The open a command prompt window and type
+  `pip intall diff3d`.
 
 * MacOS, Python 3.13 installed using `brew install python`, then `pip
   install diff3d`.
