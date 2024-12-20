@@ -1,6 +1,6 @@
 [project]
 name = "diff3d"
-version = "0.2.0"
+version = "0.2.0.post1"
 authors = [{name = "Bruce D. Lucas"}]
 description = "Fast visual 3d diff for STL, OBJ, 3MF, and STEP files"
 readme = "README.md"
