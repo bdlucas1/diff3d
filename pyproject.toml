@@ -1,6 +1,6 @@
 [project]
 name = "diff3d"
-version = "0.2.0beta1"
+version = "0.2.0beta2"
 authors = [{name = "Bruce D. Lucas"}]
 description = "Fast visual 3d diff for STL, OBJ, 3MF, and STEP files"
 readme = "README.md"
@@ -9,6 +9,7 @@ dependencies = [
     "lib3mf",
     "scipy",
     "numpy",
+    "msvc-runtime; platform_system=='Windows'",
     #"build123d",
 ]
 requires-python = ">=3.9"

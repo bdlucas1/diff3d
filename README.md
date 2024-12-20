@@ -15,9 +15,10 @@ moved.
 
 ### Quick start
 
-You will need to have Python installed. Python comes with a program
-called `pip` for installing Python programs at the system level. To
-install `diff3d` run this command:
+You will need to have Python installed - see notes in the next section
+on installing Python if you don't already have it. Python comes with a
+program called `pip` for installing Python programs at the system
+level. To install `diff3d` run this command:
 
     pip install diff3d
 
@@ -50,9 +51,17 @@ simple 3d file viewer in addition to its primary function.
 
 ### Supported platforms, file formats, and object types
 
-I use MacOS, but I believe this tool works on Windows and Linux
-as well. I have tested it with Python 3.12 and 3.13, but I think
-it will also work on some somewhat older versions of Python.
+I have tested on the following platforms:
+
+* Windows 11, Python 3.13 installed from
+  [python.org](https://www.python.org/downloads/), then `pip
+  install diff3d`.
+
+* MacOS, Python 3.13 installed using `brew install python`, then `pip
+  install diff3d`.
+
+* Linux Mint, Python 3.13 installed using `sudo apt install python
+  pipx`, then `pipx install diff3d` (instead of using `pip`).
 
 Out of the box `diff3d` supports STL, OBJ, and 3MF files. Support for a
 number of additional file types is available by installing `meshio`,
