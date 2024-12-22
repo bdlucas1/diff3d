@@ -79,9 +79,7 @@ circumstances, especially for people with some form of
 colorblindness. To help highlight areas of difference, you can press
 the "a" key and the colored areas will flash briefly.
 
-<video width="30%" controls>
-    <source src="examples/animation.mov"/>
-</video>
+<img src="examples/animation.mov" width="30%">
 
 This feature was inspired by the much more sophisticated color
 animations for enhancing color vision provided by
