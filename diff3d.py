@@ -1,5 +1,5 @@
 # load files and display a window showing the diff
-def from_files(path1, path2, scheme="1", title=None, align=False, width_pcts=None):
+def from_files(path1, path2, title=None, **kwargs):
 
     import pyvista
 
@@ -12,7 +12,7 @@ def from_files(path1, path2, scheme="1", title=None, align=False, width_pcts=Non
         title = (path1, path2) if path2 else path1
     o1 = load(path1)
     o2 = load(path2) if path2 else None
-    diff(o1, o2, scheme=scheme, title=title, align=align, width_pcts=width_pcts)
+    diff(o1, o2, **kwargs)
 
 
 # display a window showing the diff between to pyvista objects
@@ -56,11 +56,35 @@ def diff(o1, o2, scheme="1", alpha=0.25, title="diff3d", align=False, width_pcts
     # completely opaque doesn't work
     alpha = min(alpha, 0.99)
 
+    # add the meshes
     if o2:
-        pl.add_mesh(convert(o1), color=color1, opacity=alpha, **kwargs)
-        pl.add_mesh(convert(o2), color=color2, opacity=alpha, **kwargs)
+        a1 = pl.add_mesh(convert(o1), color=color1, opacity=alpha, **kwargs)
+        a2 = pl.add_mesh(convert(o2), color=color2, opacity=alpha, **kwargs)
     else:
         pl.add_mesh(o1)
+
+    # animate (flash) the colors when commanded
+    def animate():
+        import time
+        secs, hertz = 0.5, 8 # tune
+        frames_per_cycle = 2 # we're simply alternating
+        cs1 = [color1, color2]
+        cs2 = [color2, color1]
+        start = time.time()
+        def set_colors(i):
+            j = (i+1) % frames_per_cycle
+            a1.prop.color = cs1[j]
+            a2.prop.color = cs2[j]
+            frame_rate = hertz * frames_per_cycle
+            sleep_time = (start + i / frame_rate) - time.time()
+            #print(f"{i}, {time.time():.3f} sleep_time {sleep_time:.3f}")
+            if sleep_time > 0:
+                time.sleep(sleep_time)
+        frames = int(secs * hertz) * frames_per_cycle
+        pl.add_timer_event(frames, 0, set_colors)
+
+    # flash colors on press of "a" key
+    pl.add_key_event("a", animate)
 
     pl.show()
 
@@ -236,7 +260,10 @@ def cli():
     parser.add_argument("--widths", nargs="*", type=float)
     args = parser.parse_args()
 
-    from_files(args.file1, args.file2, scheme=args.scheme, align=args.align, width_pcts=args.widths)
+    from_files(
+        args.file1, args.file2, scheme=args.scheme,
+        align=args.align, width_pcts=args.widths
+    )
 
 if __name__ == "__main__":
     cli()

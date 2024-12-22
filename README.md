@@ -72,6 +72,22 @@ limited to manifold (closed surface) meshes, but can diff anything that
 can be rendered, including open surfaces, curves, and points.
 
 
+### Color animation
+
+Small areas of difference may be difficult to spot under some
+circumstances, especially for people with some form of
+colorblindness. To help highlight areas of difference, you can press
+the "a" key and the colored areas will flash briefly.
+
+<video width="30%" controls>
+    <source src="examples/animation.mov"/>
+</video>
+
+This feature was inspired by the much more sophisticated color
+animations for enhancing color vision provided by
+[ColorPhi](https://www.colorphi.com).
+
+
 ### Object alignment
 
 In some cases two objects to be compared may be shifted relative to
@@ -127,7 +143,9 @@ above schemes are named "1", "2", and "3" respectively.
 ### API
 
 The `diff3d` module provides a simple API if you want to integrate it
-into your own program. See the code for details.
+into your own program. As this is an early version of the program,
+I'll try to maintain the stability of these APIs, but I can't
+guarantee it. See the code for details.
 
 * `diff3d.from_files` opens a window displaying the diff between two files
 
@@ -138,3 +156,11 @@ into your own program. See the code for details.
   using `pyvista.PolyData.from_regular_faces`
 
 * You can align two meshes without displaying them using `diff3d.align3d`.
+
+
+### Discussions and Issues
+
+If you would like to report an issue, ask a question, or make a
+suggestion you do so through the
+[Discussions](https://github.com/bdlucas1/diff3d/discussions) and
+[Issues](https://github.com/bdlucas1/diff3d/issues) pages.
