@@ -12,7 +12,7 @@ def from_files(path1, path2, title=None, **kwargs):
         title = (path1, path2) if path2 else path1
     o1 = load(path1)
     o2 = load(path2) if path2 else None
-    diff(o1, o2, **kwargs)
+    diff(o1, o2, title=title, **kwargs)
 
 
 # display a window showing the diff between to pyvista objects
