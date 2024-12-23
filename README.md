@@ -26,7 +26,7 @@ level. To install `diff3d` run this command:
 next section.)
 
 Then to test the installation download two test files
-[lens-clamp-A.stl](https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/lens-clamp-A.stl)a
+[lens-clamp-A.stl](https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/lens-clamp-A.stl)
 and
 [lens-clamp-B.stl](https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/lens-clamp-B.stl)
 and run the command
