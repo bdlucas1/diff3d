@@ -77,9 +77,7 @@ can be rendered, including open surfaces, curves, and points.
 Small areas of difference may be difficult to spot under some
 circumstances, especially for people with some form of
 colorblindness. To help highlight areas of difference, you can press
-the "a" key and the colored areas will flash briefly.
-
-<img src="https://raw.githubusercontent.com/bdlucas1/diff3d/refs/heads/master/examples/animation.mov" width="30%">
+the "a" key and the colored areas will [flash briefly](examples/animation.mov).
 
 This feature was inspired by the much more sophisticated color
 animations for enhancing color vision provided by
