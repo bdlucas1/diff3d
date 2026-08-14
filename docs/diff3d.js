@@ -22,33 +22,41 @@ container.appendChild(renderer.domElement);
 // Orbit controls
 camera.up.set(0, 0, 1);
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
+//controls.enableDamping = true;
 //controls.minPolarAngle = 0;
 //controls.maxPolarAngle = Math.PI / 2;
 
 // Lighting
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xeeeeee);
+scene.background = new THREE.Color(0xffffff)
 scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 2));
 const light = new THREE.DirectionalLight(0xffffff, 2);
 light.position.set(1, 1, 1);
 scene.add(light);
 
+const opacity = 0.5
+
 const materials = [
     new THREE.MeshStandardMaterial({
-        color: 0x00a6d6,
+        color: 0xff00ff,
         roughness: 0.65,
         metalness: 0.05,
-        opacity: 0.25,
-        transparent: true
+        opacity: opacity,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.MultiplyBlending,
+        premultipliedAlpha: true,
     }),
     new THREE.MeshStandardMaterial({
-        color: 0xf28e2b,
+        color: 0x00ff00,
         roughness: 0.65,
         metalness: 0.05,
-        opacity: 0.25,
-        transparent: true
-    })
+        opacity: opacity,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.MultiplyBlending,
+        premultipliedAlpha: true,
+    }),
 ];
 
 const meshes = [null, null];
@@ -74,7 +82,7 @@ async function loadFile(event, index) {
     const mesh = new THREE.Mesh(geometry, materials[index]);
     meshes[index] = mesh;
     scene.add(mesh);
-    centerObject(mesh);
+    //centerObject(mesh);
     fitCameraToObjects();
 }
 
