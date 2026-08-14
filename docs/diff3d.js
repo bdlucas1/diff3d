@@ -93,6 +93,15 @@ function fitCameraToObject(object) {
 }
 
 
+window.addEventListener("resize", () => {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(
+        container.clientWidth,
+        container.clientHeight
+    );
+});
+
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
@@ -102,12 +111,5 @@ function animate() {
 animate();
 
 
-window.addEventListener("resize", () => {
-    camera.aspect = container.clientWidth / container.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(
-        container.clientWidth,
-        container.clientHeight
-    );
-});
+
 
