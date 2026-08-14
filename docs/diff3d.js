@@ -20,8 +20,11 @@ renderer.setSize(container.clientWidth, container.clientHeight);
 container.appendChild(renderer.domElement);
 
 // Orbit controls
+camera.up.set(0, 0, 1);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
+//controls.minPolarAngle = 0;
+//controls.maxPolarAngle = Math.PI / 2;
 
 // Lighting
 const scene = new THREE.Scene();
@@ -109,7 +112,6 @@ function animate() {
 }
 
 animate();
-
 
 
 
