@@ -13,19 +13,15 @@
           overflow: hidden;
       }
 
-      #file-choosers {
+      #ui {
+          font-family: sans-serif;
+          font-size: 10pt;
           position: absolute;
           z-index: 10;
-          margin: 10px;
+          margin: 2em;
           display: flex;
           flex-direction: column;
-          gap: 8px;
-      }
-
-      #file-choosers label {
-          display: flex;
-          align-items: center;
-          gap: 8px;
+          gap: 0.8em;
       }
 
       #viewer {
@@ -45,9 +41,13 @@
   </head>
 
   <body>
-    <div id="file-choosers">
-      <label>File 1 <input id="file1" type="file" accept=".stl"></label>
-      <label>File 2 <input id="file2" type="file" accept=".stl"></label>
+    <div id="ui">
+      <div>
+        Choose two STL files for comparison. All computation is done in your browser - your files
+        are not uploaded to a server, and they never leave your computer. 
+      </div>
+      <input id="file1" type="file" accept=".stl">
+      <input id="file2" type="file" accept=".stl">
     </div>
     <div id="viewer"></div>
     <script type="module" src="diff3d.js"></script>
