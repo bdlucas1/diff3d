@@ -33,7 +33,7 @@ scene.add(light);
 
 let mesh = null;
 
-document.getElementById("file").addEventListener("change", async event => {
+async function loadFile(event) {
 
     // load STL file
     const file = event.target.files[0];
@@ -62,8 +62,7 @@ document.getElementById("file").addEventListener("change", async event => {
     mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
     fitCameraToObject(mesh);
-});
-
+}
 
 function fitCameraToObject(object) {
 
@@ -92,6 +91,7 @@ function fitCameraToObject(object) {
     controls.update();
 }
 
+document.getElementById("file").addEventListener("change", loadFile);
 
 window.addEventListener("resize", () => {
     camera.aspect = container.clientWidth / container.clientHeight;
