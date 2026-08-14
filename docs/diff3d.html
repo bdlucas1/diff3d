@@ -13,10 +13,19 @@
           overflow: hidden;
       }
 
-      #file {
+      #file-choosers {
           position: absolute;
           z-index: 10;
           margin: 10px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+      }
+
+      #file-choosers label {
+          display: flex;
+          align-items: center;
+          gap: 8px;
       }
 
       #viewer {
@@ -36,7 +45,10 @@
   </head>
 
   <body>
-    <input id="file" type="file" accept=".stl">
+    <div id="file-choosers">
+      <label>File 1 <input id="file1" type="file" accept=".stl"></label>
+      <label>File 2 <input id="file2" type="file" accept=".stl"></label>
+    </div>
     <div id="viewer"></div>
     <script type="module" src="diff3d.js"></script>
   </body>

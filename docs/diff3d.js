@@ -34,9 +34,26 @@ const light = new THREE.DirectionalLight(0xffffff, 2);
 light.position.set(1, 1, 1);
 scene.add(light);
 
-let mesh = null;
+const materials = [
+    new THREE.MeshStandardMaterial({
+        color: 0x00a6d6,
+        roughness: 0.65,
+        metalness: 0.05,
+        opacity: 0.25,
+        transparent: true
+    }),
+    new THREE.MeshStandardMaterial({
+        color: 0xf28e2b,
+        roughness: 0.65,
+        metalness: 0.05,
+        opacity: 0.25,
+        transparent: true
+    })
+];
 
-async function loadFile(event) {
+const meshes = [null, null];
+
+async function loadFile(event, index) {
 
     // load STL file
     const file = event.target.files[0];
@@ -48,36 +65,36 @@ async function loadFile(event) {
     geometry.computeVertexNormals();
 
     // dispose of old one
-    if (mesh) {
-        scene.remove(mesh);
-        mesh.geometry.dispose();
-        mesh.material.dispose();
+    if (meshes[index]) {
+        scene.remove(meshes[index]);
+        meshes[index].geometry.dispose();
     }
 
-    // rendering parameters
-    const material = new THREE.MeshStandardMaterial({
-        color: 0x01aaaaaa,
-        roughness: 0.65,
-        metalness: 0.05
-    });
-
-    // Add the mesh and fit the camera
-    mesh = new THREE.Mesh(geometry, material);
+    // Add the mesh with the material assigned to this file chooser
+    const mesh = new THREE.Mesh(geometry, materials[index]);
+    meshes[index] = mesh;
     scene.add(mesh);
-    fitCameraToObject(mesh);
+    centerObject(mesh);
+    fitCameraToObjects();
 }
 
-function fitCameraToObject(object) {
-
+function centerObject(object) {
     // Move model so its bounding-box center is at the origin
     object.geometry.computeBoundingBox();
     const box = object.geometry.boundingBox;
     const center = new THREE.Vector3();
     box.getCenter(center);
     object.position.sub(center);
+}
 
-    // Recalculate world-space bounding box
-    const worldBox = new THREE.Box3().setFromObject(object);
+function fitCameraToObjects() {
+
+    // Calculate a bounding box containing both loaded models
+    const worldBox = new THREE.Box3();
+    for (const mesh of meshes) {
+        if (mesh)
+            worldBox.expandByObject(mesh);
+    }
     const size = new THREE.Vector3();
     worldBox.getSize(size);
     const maxSize = Math.max(size.x, size.y, size.z);
@@ -94,7 +111,8 @@ function fitCameraToObject(object) {
     controls.update();
 }
 
-document.getElementById("file").addEventListener("change", loadFile);
+document.getElementById("file1").addEventListener("change", event => loadFile(event, 0));
+document.getElementById("file2").addEventListener("change", event => loadFile(event, 1));
 
 window.addEventListener("resize", () => {
     camera.aspect = container.clientWidth / container.clientHeight;
@@ -112,6 +130,4 @@ function animate() {
 }
 
 animate();
-
-
 
