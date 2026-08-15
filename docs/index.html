@@ -22,6 +22,7 @@
           display: flex;
           flex-direction: column;
           gap: 0.8em;
+          max-width: 100vh;
       }
 
       .file-source {
@@ -31,6 +32,11 @@
 
       .file-source input[type="file"] {
           display: none;
+      }
+
+      .file-source button {
+          flex: 0 0 auto;
+          white-space: nowrap;
       }
 
       .file-source input[type="text"] {
@@ -44,6 +50,7 @@
       #viewer {
           width: 100%;
           height: 100%;
+          max-width: 100vh;
       }
     </style>
 
