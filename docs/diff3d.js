@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import {OrbitControls} from "three/addons/controls/OrbitControls.js";
+import {OBJLoader} from "three/addons/loaders/OBJLoader.js";
 import {STLLoader} from "three/addons/loaders/STLLoader.js";
 
 // Our root element
@@ -60,25 +61,63 @@ const materials = [
     }),
 ];
 
-const meshes = [null, null];
+const objects = [null, null];
 const loadedURLs = [null, null];
 
-function loadBuffer(buffer, index) {
-    const loader = new STLLoader();
-    const geometry = loader.parse(buffer);
-    geometry.computeVertexNormals();
+function getFileExtension(source) {
+    const pathname = new URL(source, window.location.href).pathname;
+    return pathname.slice(pathname.lastIndexOf(".")).toLowerCase();
+}
 
-    // dispose of old one
-    if (meshes[index]) {
-        scene.remove(meshes[index]);
-        meshes[index].geometry.dispose();
+function parseObject(buffer, source, index) {
+
+    const extension = getFileExtension(source);
+
+    if (extension === ".stl") {
+        const geometry = new STLLoader().parse(buffer);
+        geometry.computeVertexNormals();
+        return new THREE.Mesh(geometry, materials[index]);
     }
 
-    // Add the mesh with the material assigned to this file chooser
-    const mesh = new THREE.Mesh(geometry, materials[index]);
-    meshes[index] = mesh;
-    scene.add(mesh);
-    //centerObject(mesh);
+    if (extension === ".obj") {
+        const object = new OBJLoader().parse(new TextDecoder().decode(buffer));
+        object.traverse(child => {
+            if (!child.isMesh)
+                return;
+            if (!child.geometry.getAttribute("normal"))
+                child.geometry.computeVertexNormals();
+            const originalMaterials = Array.isArray(child.material) ? child.material : [child.material];
+            for (const material of originalMaterials)
+                material.dispose();
+            child.material = materials[index];
+        });
+        return object;
+    }
+
+    throw new Error(`Unsupported file type "${extension || "unknown"}"`);
+}
+
+function disposeObject(object) {
+    object.traverse(child => {
+        if (child.geometry)
+            child.geometry.dispose();
+    });
+}
+
+function loadBuffer(buffer, source, index) {
+
+    const object = parseObject(buffer, source, index);
+
+    // dispose of old one
+    if (objects[index]) {
+        scene.remove(objects[index]);
+        disposeObject(objects[index]);
+    }
+
+    // Add the object with the material assigned to this file chooser
+    objects[index] = object;
+    scene.add(object);
+    //centerObject(object);
     fitCameraToObjects();
 }
 
@@ -94,8 +133,13 @@ async function loadFile(event, index) {
     urlInput.value = displayURL;
     urlInput.setCustomValidity("");
 
-    loadBuffer(await file.arrayBuffer(), index);
-    loadedURLs[index] = displayURL;
+    try {
+        loadBuffer(await file.arrayBuffer(), file.name, index);
+        loadedURLs[index] = displayURL;
+    } catch (error) {
+        urlInput.setCustomValidity(`Unable to load file: ${error.message}`);
+        urlInput.reportValidity();
+    }
 }
 
 async function loadURL(input, index) {
@@ -108,19 +152,18 @@ async function loadURL(input, index) {
         const response = await fetch(url);
         if (!response.ok)
             throw new Error(`HTTP ${response.status}`);
-        loadBuffer(await response.arrayBuffer(), index);
+        loadBuffer(await response.arrayBuffer(), url, index);
         loadedURLs[index] = url;
         input.setCustomValidity("");
     } catch (error) {
-        input.setCustomValidity(`Unable to load STL: ${error.message}`);
+        input.setCustomValidity(`Unable to load file: ${error.message}`);
         input.reportValidity();
     }
 }
 
 function centerObject(object) {
     // Move model so its bounding-box center is at the origin
-    object.geometry.computeBoundingBox();
-    const box = object.geometry.boundingBox;
+    const box = new THREE.Box3().setFromObject(object);
     const center = new THREE.Vector3();
     box.getCenter(center);
     object.position.sub(center);
@@ -130,13 +173,14 @@ function fitCameraToObjects() {
 
     // Calculate a bounding box containing both loaded models
     const worldBox = new THREE.Box3();
-    for (const mesh of meshes) {
-        if (mesh)
-            worldBox.expandByObject(mesh);
+    for (const object of objects) {
+        if (object)
+            worldBox.expandByObject(object);
     }
     const size = new THREE.Vector3();
     worldBox.getSize(size);
     const maxSize = Math.max(size.x, size.y, size.z);
+    console.log("maxSize", maxSize)
 
     // Position camera far enough away to see whole object
     const fov = THREE.MathUtils.degToRad(camera.fov);
@@ -150,6 +194,7 @@ function fitCameraToObjects() {
     controls.update();
 }
 
+// Add event listeners to input fields and file choosers
 for (const [index, suffix] of ["a", "b"].entries()) {
     const fileInput = document.getElementById(`file-${suffix}`);
     const urlInput = document.getElementById(`url-${suffix}`);
@@ -164,7 +209,7 @@ for (const [index, suffix] of ["a", "b"].entries()) {
     });
 }
 
-// Replace these with the sample STL URLs when they are available.
+// Set up the load-samples link
 const sampleURLs = [
     "https://bdlucas1.github.io/diff3d/lens-clamp-A.stl",
     "https://bdlucas1.github.io/diff3d/lens-clamp-B.stl",
@@ -182,6 +227,7 @@ document.getElementById("load-samples").addEventListener("click", event => {
     }
 });
 
+// Change rendered size when window resizes
 window.addEventListener("resize", () => {
     camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
@@ -191,6 +237,7 @@ window.addEventListener("resize", () => {
     );
 });
 
+// Rendering loop
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
