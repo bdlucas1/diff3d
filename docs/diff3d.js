@@ -69,6 +69,8 @@ function getFileExtension(source) {
     return pathname.slice(pathname.lastIndexOf(".")).toLowerCase();
 }
 
+// Given a buffer containing an STL or OBJ file, parse it,
+// using source extension to determine type, and return a threejs object
 function parseObject(buffer, source, index) {
 
     const extension = getFileExtension(source);
@@ -104,6 +106,8 @@ function disposeObject(object) {
     });
 }
 
+// Given a buffer containing an STL or OBJ file, parse it, add it to
+// the scene in slot index, and adjust the camera
 function loadBuffer(buffer, source, index) {
 
     const object = parseObject(buffer, source, index);
@@ -121,6 +125,7 @@ function loadBuffer(buffer, source, index) {
     fitCameraToObjects();
 }
 
+// Fetch a local file and load it into the scene at slot index
 async function loadFile(event, index) {
 
     const file = event.target.files[0];
@@ -142,6 +147,7 @@ async function loadFile(event, index) {
     }
 }
 
+// Fetch a remote URL and load it into the scene at slot index
 async function loadURL(input, index) {
 
     const url = input.value.trim();
