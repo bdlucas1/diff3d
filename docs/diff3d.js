@@ -60,14 +60,9 @@ const materials = [
 ];
 
 const meshes = [null, null];
+const loadedURLs = [null, null];
 
-async function loadFile(event, index) {
-
-    // load STL file
-    const file = event.target.files[0];
-    if (!file)
-        return;
-    const buffer = await file.arrayBuffer();
+function loadBuffer(buffer, index) {
     const loader = new STLLoader();
     const geometry = loader.parse(buffer);
     geometry.computeVertexNormals();
@@ -84,6 +79,41 @@ async function loadFile(event, index) {
     scene.add(mesh);
     //centerObject(mesh);
     fitCameraToObjects();
+}
+
+async function loadFile(event, index) {
+
+    const file = event.target.files[0];
+    if (!file)
+        return;
+
+    //const displayURL = new URL(file.name, "file:").href;
+    const displayURL = file.name
+    const urlInput = document.getElementById(index === 0 ? "url-a" : "url-b");
+    urlInput.value = displayURL;
+    urlInput.setCustomValidity("");
+
+    loadBuffer(await file.arrayBuffer(), index);
+    loadedURLs[index] = displayURL;
+}
+
+async function loadURL(input, index) {
+
+    const url = input.value.trim();
+    if (!url || url === loadedURLs[index])
+        return;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok)
+            throw new Error(`HTTP ${response.status}`);
+        loadBuffer(await response.arrayBuffer(), index);
+        loadedURLs[index] = url;
+        input.setCustomValidity("");
+    } catch (error) {
+        input.setCustomValidity(`Unable to load STL: ${error.message}`);
+        input.reportValidity();
+    }
 }
 
 function centerObject(object) {
@@ -119,8 +149,19 @@ function fitCameraToObjects() {
     controls.update();
 }
 
-document.getElementById("file1").addEventListener("change", event => loadFile(event, 0));
-document.getElementById("file2").addEventListener("change", event => loadFile(event, 1));
+for (const [index, suffix] of ["a", "b"].entries()) {
+    const fileInput = document.getElementById(`file-${suffix}`);
+    const urlInput = document.getElementById(`url-${suffix}`);
+    document.getElementById(`choose-file-${suffix}`).addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", event => loadFile(event, index));
+    urlInput.addEventListener("change", () => loadURL(urlInput, index));
+    urlInput.addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            loadURL(urlInput, index);
+        }
+    });
+}
 
 window.addEventListener("resize", () => {
     camera.aspect = container.clientWidth / container.clientHeight;
@@ -138,4 +179,3 @@ function animate() {
 }
 
 animate();
-
