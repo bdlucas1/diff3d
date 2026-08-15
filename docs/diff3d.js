@@ -36,9 +36,10 @@ scene.add(light);
 
 const opacity = 0.5
 
+// TODO: set button colors programmatically based on these colors
 const materials = [
     new THREE.MeshStandardMaterial({
-        color: 0xff00ff,
+        color: 0x00ff00,
         roughness: 0.65,
         metalness: 0.05,
         opacity: opacity,
@@ -48,7 +49,7 @@ const materials = [
         premultipliedAlpha: true,
     }),
     new THREE.MeshStandardMaterial({
-        color: 0x00ff00,
+        color: 0xff00ff,
         roughness: 0.65,
         metalness: 0.05,
         opacity: opacity,
