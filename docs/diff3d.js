@@ -163,6 +163,24 @@ for (const [index, suffix] of ["a", "b"].entries()) {
     });
 }
 
+// Replace these with the sample STL URLs when they are available.
+const sampleURLs = [
+    "https://raw.githubusercontent.com/bdlucas1/diff3d/master/examples/lens-clamp-A.stl",
+    "https://raw.githubusercontent.com/bdlucas1/diff3d/master/examples/lens-clamp-B.stl"
+];
+
+document.getElementById("load-samples").addEventListener("click", event => {
+
+    event.preventDefault();
+
+    for (const [index, suffix] of ["a", "b"].entries()) {
+        const input = document.getElementById(`url-${suffix}`);
+        input.value = sampleURLs[index];
+        input.setCustomValidity("");
+        loadURL(input, index);
+    }
+});
+
 window.addEventListener("resize", () => {
     camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
