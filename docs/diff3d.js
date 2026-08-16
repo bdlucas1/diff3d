@@ -125,7 +125,7 @@ function disposeObject(object) {
     });
 }
 
-// Given a buffer containing an STL, OBJ, or 3MF file, parse it, add it to
+// Given a buffer, parse it using source to determine type, add it to
 // the scene in slot index, and adjust the camera
 function loadBuffer(buffer, source, index) {
 
