@@ -2,8 +2,29 @@
 <html>
 
   <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="diff3d">
+    <meta property="og:description"
+          content="Compare two STL, OBJ, or 3MF models directly in your browser.">
+    <meta property="og:url" content="https://bdlucas1.github.io/diff3d/">
+    <meta property="og:image"
+          content="https://bdlucas1.github.io/diff3d/social-preview.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt"
+          content="Two overlaid 3D models being compared in diff3d">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="diff3d">
+    <meta name="twitter:description"
+          content="Compare two STL, OBJ, or 3MF models directly in your browser.">
+    <meta name="twitter:image"
+          content="https://bdlucas1.github.io/diff3d/social-preview.png">
+
     <title>diff3d</title>
 
     <style>
@@ -83,9 +104,10 @@
     <div id="ui">
       <div>
         Choose two local STL, OBJ, or 3MF files for comparison, enter external URLs, or
-        <a id="load-samples" href="#">load sample files</a>. Files are processed entirely
-        in your browser and are not uploaded. Left mouse button drag rotates objects;
-        right mouse button drag pans; scroll wheel zooms.
+        <a id="load-samples" href="#">load sample files</a>.
+        Files are processed entirely in your browser and are not uploaded.
+        Identical surfaces are rendered in gray; surfaces that differ are color coded by file.
+        Left mouse button drag rotates objects;  right mouse button drag pans; scroll wheel zooms.
         Source code and a downloadable CLI version of this tool
         <a href="http://github.com/bdlucas1/diff3d">are available</a>. 
       </div>
