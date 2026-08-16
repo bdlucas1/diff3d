@@ -1,4 +1,4 @@
-This Python program provides a simple, fast, and robust way to visually
+This tool program provides a simple, fast, and robust way to visually
 compare 3d files such as STL, OBJ, 3MF, and STEP. The unchanged parts
 of the objects are shown in gray, while the changed parts are shown in
 contrasting colors that stand out, illustrated by the following
@@ -12,8 +12,22 @@ and green for the other file: in the red file the diameter is smaller,
 while in the green file the base is longer, and the threaded hole has
 moved.
 
+Two versions of the tool are provided:
 
-### Quick start
+* Point your browser at https://bdlucas1.github.io/diff3d/ to run a
+  version that operates directly in your browser. The STL, OBJ, or 3MF
+  files to be compared are processed entirely in your browser and are
+  not uploaded.  The JavaScript code for this version that runs in
+  your browser is located in the `docs/` directory.
+
+* A Python command-line version can be downloaded and run
+  locally. This version has a couple of additional features: object
+  alignment, STEP file support, color animation, and multiple color
+  schemes. The remainder of this document describes installation and
+  use of the Python version.
+
+
+### Python version quick start
 
 You will need to have Python installed - see notes in the next section
 on installing Python if you don't already have it. Python comes with a

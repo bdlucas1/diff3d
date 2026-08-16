@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="diff3d">
+    <meta property="og:description"
+          content="Compare two STL, OBJ, or 3MF models directly in your browser.">
+    <meta property="og:url" content="https://bdlucas1.github.io/diff3d/">
+    <meta property="og:image"
+          content="https://bdlucas1.github.io/diff3d/social-preview.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt"
+          content="Two overlaid 3D models being compared in diff3d">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="diff3d">
+    <meta name="twitter:description"
+          content="Compare two STL, OBJ, or 3MF models directly in your browser.">
+    <meta name="twitter:image"
+          content="https://bdlucas1.github.io/diff3d/social-preview.png">
+
+    <title>diff3d</title>
+
+    <style>
+      html, body {
+          margin: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+      }
+
+      #ui {
+          font-family: sans-serif;
+          font-size: 10pt;
+          position: absolute;
+          z-index: 10;
+          padding: 1rem 1.5rem 1rem 1.5rem;
+          background: rgba(255,255,255,0.8);
+          display: flex;
+          flex-direction: column;
+          gap: 0.8em;
+          max-width: 100vh;
+      }
+
+      .file-source {
+          display: flex;
+          gap: 0.6em;
+      }
+
+      .file-source input[type="file"] {
+          display: none;
+      }
+
+      .file-source button {
+          flex: 0 0 auto;
+          white-space: nowrap;
+      }
+
+      /* TODO: set programmatically based on color scheme */
+      .file-source button#choose-file-a {
+          color: #00AA00;
+      }
+
+      /* TODO: set programmatically based on color scheme */
+      .file-source button#choose-file-b {
+          color: #AA00AA;
+      }
+
+      .file-source input[type="text"] {
+          width: min(48em, 60vw);
+      }
+
+      .file-source input::placeholder {
+          color: #aaa;
+      }
+
+      #viewer {
+          width: 100%;
+          height: 100%;
+          max-width: calc(100vh + 3rem);
+      }
+    </style>
+
+    <script type="importmap">
+      {
+          "imports": {
+              "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+              "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+          }
+      }
+    </script>
+
+    <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "6f9b559f2e9441b58e83894f630542b5"}'></script>
+
+  </head>
+
+  <body>
+    <div id="ui">
+      <div>
+        Choose two local STL, OBJ, or 3MF files for comparison, enter external URLs, or
+        <a id="load-samples" href="#">load sample files</a>.
+        Files are processed entirely in your browser and are not uploaded.
+        Identical surfaces are rendered in gray; surfaces that differ are color coded by file.
+        Left mouse button drag rotates objects;  right mouse button drag pans; scroll wheel zooms.
+        Source code and a downloadable CLI version of this tool
+        <a href="http://github.com/bdlucas1/diff3d">are available</a>. 
+      </div>
+      <div class="file-source">
+        <button id="choose-file-a" type="button">Choose file A</button>
+        <input id="file-a" type="file" accept=".stl,.obj,.3mf">
+        <input id="url-a" type="text" placeholder="Choose file or enter URL" spellcheck="false">
+      </div>
+      <div class="file-source">
+        <button id="choose-file-b" type="button">Choose file B</button>
+        <input id="file-b" type="file" accept=".stl,.obj,.3mf">
+        <input id="url-b" type="text" placeholder="Choose file or enter URL" spellcheck="false">
+      </div>
+    </div>
+    <div id="viewer"></div>
+    <script type="module" src="diff3d.js"></script>
+  </body>
+
+</html>
