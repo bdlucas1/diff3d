@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import {OrbitControls} from "three/addons/controls/OrbitControls.js";
+import {ThreeMFLoader} from "three/addons/loaders/3MFLoader.js";
 import {OBJLoader} from "three/addons/loaders/OBJLoader.js";
 import {STLLoader} from "three/addons/loaders/STLLoader.js";
 
@@ -69,30 +70,48 @@ function getFileExtension(source) {
     return pathname.slice(pathname.lastIndexOf(".")).toLowerCase();
 }
 
-// Given a buffer containing an STL or OBJ file, parse it,
+// Traverse an object, computing normals if needed, and override any
+// pre-existing material (color, etc.) with ours
+function applyMaterial(object, material) {
+    object.traverse(child => {
+        if (!child.isMesh)
+            return;
+        if (!child.geometry.getAttribute("normal"))
+            child.geometry.computeVertexNormals();
+        const originalMaterials = Array.isArray(child.material) ? child.material : [child.material];
+        for (const originalMaterial of originalMaterials)
+            originalMaterial.dispose();
+        child.material = material;
+    });
+}
+
+// Given a buffer containing an STL, OBJ, or 3MF file, parse it,
 // using source extension to determine type, and return a threejs object
 function parseObject(buffer, source, index) {
 
     const extension = getFileExtension(source);
 
+    // STL files are just a mesh, not a hierarchical threejs object
+    // and they don't specify colors etc.
     if (extension === ".stl") {
         const geometry = new STLLoader().parse(buffer);
         geometry.computeVertexNormals();
         return new THREE.Mesh(geometry, materials[index]);
     }
 
+    // OBJ files may be a hierarchical threejs object,
+    // and they may have colors etc. that we need to replace
     if (extension === ".obj") {
         const object = new OBJLoader().parse(new TextDecoder().decode(buffer));
-        object.traverse(child => {
-            if (!child.isMesh)
-                return;
-            if (!child.geometry.getAttribute("normal"))
-                child.geometry.computeVertexNormals();
-            const originalMaterials = Array.isArray(child.material) ? child.material : [child.material];
-            for (const material of originalMaterials)
-                material.dispose();
-            child.material = materials[index];
-        });
+        applyMaterial(object, materials[index]);
+        return object;
+    }
+
+    // 3MF files may be a hierarchical threejs object,
+    // and they may have colors etc. that we need to replace
+    if (extension === ".3mf") {
+        const object = new ThreeMFLoader().parse(buffer);
+        applyMaterial(object, materials[index]);
         return object;
     }
 
@@ -106,7 +125,7 @@ function disposeObject(object) {
     });
 }
 
-// Given a buffer containing an STL or OBJ file, parse it, add it to
+// Given a buffer containing an STL, OBJ, or 3MF file, parse it, add it to
 // the scene in slot index, and adjust the camera
 function loadBuffer(buffer, source, index) {
 
