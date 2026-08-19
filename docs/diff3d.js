@@ -64,10 +64,74 @@ const materials = [
 
 const objects = [null, null];
 const loadedURLs = [null, null];
+const stepRequests = new Map();
+const stepWorker = new Worker(new URL("./step-worker.js", import.meta.url));
+let nextStepRequestId = 0;
+
+stepWorker.addEventListener("message", event => {
+    const request = stepRequests.get(event.data.id);
+    if (!request)
+        return;
+    stepRequests.delete(event.data.id);
+    if (event.data.error)
+        request.reject(new Error(event.data.error));
+    else
+        request.resolve(event.data.result);
+});
+
+stepWorker.addEventListener("error", event => {
+    const error = new Error(event.message || "STEP worker failed");
+    for (const request of stepRequests.values())
+        request.reject(error);
+    stepRequests.clear();
+});
 
 function getFileExtension(source) {
     const pathname = new URL(source, window.location.href).pathname;
     return pathname.slice(pathname.lastIndexOf(".")).toLowerCase();
+}
+
+function parseSTEP(buffer) {
+    return new Promise((resolve, reject) => {
+        const id = nextStepRequestId++;
+        stepRequests.set(id, {resolve, reject});
+        stepWorker.postMessage({id, buffer}, [buffer]);
+    });
+}
+
+function buildSTEPObject(result, material) {
+    if (!result.success)
+        throw new Error("OpenCascade could not import this STEP file");
+
+    const object = new THREE.Group();
+    object.name = result.root?.name || "STEP model";
+
+    for (const sourceMesh of result.meshes) {
+        const geometry = new THREE.BufferGeometry();
+        geometry.name = sourceMesh.name || "";
+        geometry.setAttribute(
+            "position",
+            new THREE.Float32BufferAttribute(sourceMesh.attributes.position.array, 3)
+        );
+        if (sourceMesh.attributes.normal) {
+            geometry.setAttribute(
+                "normal",
+                new THREE.Float32BufferAttribute(sourceMesh.attributes.normal.array, 3)
+            );
+        } else {
+            geometry.computeVertexNormals();
+        }
+        geometry.setIndex(
+            new THREE.BufferAttribute(Uint32Array.from(sourceMesh.index.array), 1)
+        );
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.name = sourceMesh.name || "";
+        object.add(mesh);
+    }
+
+    if (object.children.length === 0)
+        throw new Error("STEP file contains no displayable meshes");
+    return object;
 }
 
 // Traverse an object, computing normals if needed, and override any
@@ -85,9 +149,9 @@ function applyMaterial(object, material) {
     });
 }
 
-// Given a buffer containing an STL, OBJ, or 3MF file, parse it,
+// Given a buffer containing an STL, OBJ, 3MF, or STEP file, parse it,
 // using source extension to determine type, and return a threejs object
-function parseObject(buffer, source, index) {
+async function parseObject(buffer, source, index) {
 
     const extension = getFileExtension(source);
 
@@ -115,6 +179,13 @@ function parseObject(buffer, source, index) {
         return object;
     }
 
+    // STEP contains CAD surfaces rather than triangles. OpenCascade runs in a
+    // worker to tessellate them without blocking interaction with the viewer.
+    if (extension === ".step" || extension === ".stp") {
+        const result = await parseSTEP(buffer);
+        return buildSTEPObject(result, materials[index]);
+    }
+
     throw new Error(`Unsupported file type "${extension || "unknown"}"`);
 }
 
@@ -127,9 +198,9 @@ function disposeObject(object) {
 
 // Given a buffer, parse it using source to determine type, add it to
 // the scene in slot index, and adjust the camera
-function loadBuffer(buffer, source, index) {
+async function loadBuffer(buffer, source, index) {
 
-    const object = parseObject(buffer, source, index);
+    const object = await parseObject(buffer, source, index);
 
     // dispose of old one
     if (objects[index]) {
@@ -142,6 +213,14 @@ function loadBuffer(buffer, source, index) {
     scene.add(object);
     //centerObject(object);
     fitCameraToObjects();
+}
+
+function setSlotLoading(index, loading) {
+    const suffix = index === 0 ? "a" : "b";
+    const button = document.getElementById(`choose-file-${suffix}`);
+    button.disabled = loading;
+    button.textContent = loading ? `Loading file ${suffix.toUpperCase()}…` : `Choose file ${suffix.toUpperCase()}`;
+    document.getElementById(`url-${suffix}`).readOnly = loading;
 }
 
 // Fetch a local file and load it into the scene at slot index
@@ -157,12 +236,15 @@ async function loadFile(event, index) {
     urlInput.value = displayURL;
     urlInput.setCustomValidity("");
 
+    setSlotLoading(index, true);
     try {
-        loadBuffer(await file.arrayBuffer(), file.name, index);
+        await loadBuffer(await file.arrayBuffer(), file.name, index);
         loadedURLs[index] = displayURL;
     } catch (error) {
         urlInput.setCustomValidity(`Unable to load file: ${error.message}`);
         urlInput.reportValidity();
+    } finally {
+        setSlotLoading(index, false);
     }
 }
 
@@ -173,16 +255,19 @@ async function loadURL(input, index) {
     if (!url || url === loadedURLs[index])
         return;
 
+    setSlotLoading(index, true);
     try {
         const response = await fetch(url);
         if (!response.ok)
             throw new Error(`HTTP ${response.status}`);
-        loadBuffer(await response.arrayBuffer(), url, index);
+        await loadBuffer(await response.arrayBuffer(), url, index);
         loadedURLs[index] = url;
         input.setCustomValidity("");
     } catch (error) {
         input.setCustomValidity(`Unable to load file: ${error.message}`);
         input.reportValidity();
+    } finally {
+        setSlotLoading(index, false);
     }
 }
 

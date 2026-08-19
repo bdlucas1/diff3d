@@ -9,7 +9,7 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="diff3d">
     <meta property="og:description"
-          content="Compare two STL, OBJ, or 3MF models directly in your browser.">
+          content="Compare STL, OBJ, 3MF, or STEP models directly in your browser.">
     <meta property="og:url" content="https://bdlucas1.github.io/diff3d/">
     <meta property="og:image"
           content="https://bdlucas1.github.io/diff3d/social-preview.jpg">
@@ -21,7 +21,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="diff3d">
     <meta name="twitter:description"
-          content="Compare two STL, OBJ, or 3MF models directly in your browser.">
+          content="Compare STL, OBJ, 3MF, or STEP models directly in your browser.">
     <meta name="twitter:image"
           content="https://bdlucas1.github.io/diff3d/social-preview.png">
 
@@ -103,7 +103,7 @@
   <body>
     <div id="ui">
       <div>
-        Choose two local STL, OBJ, or 3MF files for comparison, enter external URLs, or
+        Choose two local STL, OBJ, 3MF, or STEP files for comparison, enter external URLs, or
         <a id="load-samples" href="#">load sample files</a>.
         Files are processed entirely in your browser and are not uploaded.
         Identical surfaces are rendered in gray; surfaces that differ are color coded by file.
@@ -113,12 +113,12 @@
       </div>
       <div class="file-source">
         <button id="choose-file-a" type="button">Choose file A</button>
-        <input id="file-a" type="file" accept=".stl,.obj,.3mf">
+        <input id="file-a" type="file" accept=".stl,.obj,.3mf,.step,.stp">
         <input id="url-a" type="text" placeholder="Choose file or enter URL" spellcheck="false">
       </div>
       <div class="file-source">
         <button id="choose-file-b" type="button">Choose file B</button>
-        <input id="file-b" type="file" accept=".stl,.obj,.3mf">
+        <input id="file-b" type="file" accept=".stl,.obj,.3mf,.step,.stp">
         <input id="url-b" type="text" placeholder="Choose file or enter URL" spellcheck="false">
       </div>
     </div>
