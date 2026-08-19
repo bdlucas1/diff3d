@@ -64,6 +64,10 @@ const materials = [
 
 const objects = [null, null];
 const loadedURLs = [null, null];
+
+// Loading the STEP support library and tesselating the STEP file is
+// potentially a bit slow, so we load it in the background. In practice so far
+// it doesn't seem to be that slow, so not sure this complexity is justified.
 const stepRequests = new Map();
 const stepWorker = new Worker(new URL("./step-worker.js", import.meta.url));
 let nextStepRequestId = 0;
@@ -215,14 +219,6 @@ async function loadBuffer(buffer, source, index) {
     fitCameraToObjects();
 }
 
-function setSlotLoading(index, loading) {
-    const suffix = index === 0 ? "a" : "b";
-    const button = document.getElementById(`choose-file-${suffix}`);
-    button.disabled = loading;
-    button.textContent = loading ? `Loading file ${suffix.toUpperCase()}…` : `Choose file ${suffix.toUpperCase()}`;
-    document.getElementById(`url-${suffix}`).readOnly = loading;
-}
-
 // Fetch a local file and load it into the scene at slot index
 async function loadFile(event, index) {
 
@@ -233,20 +229,19 @@ async function loadFile(event, index) {
     //const displayURL = new URL(file.name, "file:").href;
     const displayURL = file.name
     const urlInput = document.getElementById(index === 0 ? "url-a" : "url-b");
-    urlInput.value = displayURL;
+    urlInput.value = "Loading " + displayURL + "...";
     urlInput.setCustomValidity("");
 
-    setSlotLoading(index, true);
     try {
         await loadBuffer(await file.arrayBuffer(), file.name, index);
         loadedURLs[index] = displayURL;
+        urlInput.value = displayURL;
     } catch (error) {
         urlInput.setCustomValidity(`Unable to load file: ${error.message}`);
         urlInput.reportValidity();
-    } finally {
-        setSlotLoading(index, false);
     }
 }
+
 
 // Fetch a remote URL and load it into the scene at slot index
 async function loadURL(input, index) {
@@ -255,7 +250,7 @@ async function loadURL(input, index) {
     if (!url || url === loadedURLs[index])
         return;
 
-    setSlotLoading(index, true);
+    input.value = "Loading " + url + "..."
     try {
         const response = await fetch(url);
         if (!response.ok)
@@ -263,11 +258,10 @@ async function loadURL(input, index) {
         await loadBuffer(await response.arrayBuffer(), url, index);
         loadedURLs[index] = url;
         input.setCustomValidity("");
+        input.value = url
     } catch (error) {
         input.setCustomValidity(`Unable to load file: ${error.message}`);
         input.reportValidity();
-    } finally {
-        setSlotLoading(index, false);
     }
 }
 
