@@ -15,7 +15,7 @@ moved.
 Two versions of the tool are provided:
 
 * Point your browser at https://bdlucas1.github.io/diff3d/ to run a
-  version that operates directly in your browser. The STL, OBJ, or 3MF
+  version that operates directly in your browser. The STL, OBJ, 3MF, or STEP
   files to be compared are processed entirely in your browser and are
   not uploaded.  The JavaScript code for this version that runs in
   your browser is located in the `docs/` directory.
