@@ -21,10 +21,9 @@ Two versions of the tool are provided:
   your browser is located in the `docs/` directory.
 
 * A Python command-line version can be downloaded and run
-  locally. This version has a couple of additional features: object
-  alignment, STEP file support, color animation, and multiple color
-  schemes. The remainder of this document describes installation and
-  use of the Python version.
+  locally. This version has a couple of additional features: color
+  animation and multiple color schemes. The remainder of this
+  document describes installation and use of the Python version.
 
 
 ### Python version quick start
