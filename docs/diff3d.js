@@ -30,7 +30,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 
 // Lighting
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xffffff)
+scene.background = new THREE.Color(0xf4f4f4)
 scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 2));
 const light = new THREE.DirectionalLight(0xffffff, 2);
 light.position.set(1, 1, 1);
@@ -504,7 +504,7 @@ function fitCameraToObjects() {
     // Position camera far enough away to see whole object
     const fov = THREE.MathUtils.degToRad(camera.fov);
     let distance = maxSize / (2 * Math.tan(fov / 2));
-    distance *= 1.5;
+    //distance *= 1.5;
     camera.position.set(distance, distance, distance);
     camera.near = Math.max(maxSize / 1000, 0.001);
     camera.far = maxSize * 1000;
@@ -556,15 +556,19 @@ document.getElementById("load-samples").addEventListener("click", event => {
     }
 });
 
-// Change rendered size when window resizes
-window.addEventListener("resize", () => {
-    camera.aspect = container.clientWidth / container.clientHeight;
+// Keep the renderer matched to the viewer's remaining layout space. Observing
+// the container also handles UI height changes such as showing or hiding help.
+function resizeRenderer() {
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    if (width === 0 || height === 0)
+        return;
+    camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    renderer.setSize(
-        container.clientWidth,
-        container.clientHeight
-    );
-});
+    renderer.setSize(width, height);
+}
+
+new ResizeObserver(resizeRenderer).observe(container);
 
 // Rendering loop
 function animate() {
