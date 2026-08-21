@@ -53,6 +53,17 @@
           gap: 0.6em;
       }
 
+      #alignment-controls {
+          display: flex;
+          align-items: center;
+          gap: 0.6em;
+      }
+
+      #align-status {
+          min-height: 1em;
+          font-size: 8pt;
+      }
+
       .file-source input[type="file"] {
           display: none;
       }
@@ -120,6 +131,10 @@
         <button id="choose-file-b" type="button">Choose file B</button>
         <input id="file-b" type="file" accept=".stl,.obj,.3mf,.step,.stp">
         <input id="url-b" type="text" placeholder="Choose file or enter URL" spellcheck="false">
+      </div>
+      <div id="alignment-controls">
+        <button id="align" type="button" disabled>Align</button>
+        <span id="align-status" role="status" aria-live="polite"></span>
       </div>
     </div>
     <div id="viewer"></div>
