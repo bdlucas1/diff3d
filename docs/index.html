@@ -136,13 +136,26 @@
     <div id="ui">
       <a id="toggle-help" href="#">Show help</a>
       <div id="help">
-        Choose two local STL, OBJ, 3MF, or STEP files for comparison, enter external URLs, or
-        <a id="load-samples" href="#">load sample files</a>.
-        Files are processed entirely in your browser and are not uploaded.
-        Identical surfaces are rendered in gray; surfaces that differ are color coded by file.
-        Left mouse button drag rotates objects;  right mouse button drag pans; scroll wheel zooms.
-        Source code and a downloadable CLI version of this tool
-        <a href="http://github.com/bdlucas1/diff3d">are available</a>. 
+        <ul>
+          <li>
+            Choose two local STL, OBJ, 3MF, or STEP files for comparison, enter URLs, or
+            <a id="load-samples" href="#">load sample files</a>.
+          </li>
+          <li>
+            Files are processed entirely in your browser and are not uploaded.
+          </li>
+          <li>
+            Identical surfaces are rendered in gray; surfaces that differ are color coded by file.
+          </li>
+          <li>
+            Left mouse button drag rotates objects; right mouse button drag pans; scroll wheel zooms.
+          </li>
+          <li>
+            Source code and a downloadable CLI version of this tool
+            <a href="http://github.com/bdlucas1/diff3d">are available</a>. 
+          </li>
+          <li>The align button attempts to shift the models so that major unchanged features overlap.
+        </ul>
       </div>
       <div class="file-source">
         <button id="choose-file-a" type="button">Choose file A</button>
