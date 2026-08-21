@@ -35,6 +35,11 @@
           overflow: hidden;
       }
 
+      a {
+          color: #888888;
+          font-weight: bold;
+      }
+
       #ui {
           font-family: sans-serif;
           font-size: 10pt;
@@ -46,6 +51,10 @@
           flex-direction: column;
           gap: 0.8em;
           max-width: 100vh;
+      }
+
+      #show-help {
+          font-weight: bold;
       }
 
       .file-source {
@@ -113,7 +122,8 @@
 
   <body>
     <div id="ui">
-      <div>
+      <a id="toggle-help" href="#">Show help</a>
+      <div id="help">
         Choose two local STL, OBJ, 3MF, or STEP files for comparison, enter external URLs, or
         <a id="load-samples" href="#">load sample files</a>.
         Files are processed entirely in your browser and are not uploaded.

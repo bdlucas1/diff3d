@@ -513,6 +513,16 @@ function fitCameraToObjects() {
     controls.update();
 }
 
+// Add event listener to show/hide help
+document.getElementById("toggle-help").addEventListener("click", (event) => toggleHelp(event))
+function toggleHelp(event) {
+    if (event)
+        event.preventDefault()
+    help.hidden = !help.hidden;
+    document.getElementById("toggle-help").innerText = help.hidden? "Show help" : "Hide help"
+}
+toggleHelp()
+
 // Add event listeners to input fields and file choosers
 for (const [index, suffix] of ["a", "b"].entries()) {
     const fileInput = document.getElementById(`file-${suffix}`);
